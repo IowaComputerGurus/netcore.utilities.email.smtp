@@ -13,6 +13,11 @@ namespace ICG.NetCore.Utilities.Email
     public interface ISmtpService
     {
         /// <summary>
+        /// Returns the configured administrator email for the SMTP service
+        /// </summary>
+        string AdminEmail { get; }
+
+        /// <summary>
         ///     Shortcut for sending an email to the administrator, only requiring the subject and body.
         /// </summary>
         /// <param name="subject">The message subject</param>
@@ -44,6 +49,9 @@ namespace ICG.NetCore.Utilities.Email
         private readonly IMimeMessageFactory _mimeMessageFactory;
         private readonly IMimeKitService _mimeKitService;
 
+        /// <inheritdoc />
+        public string AdminEmail => _serviceOptions?.AdminEmail;
+        
         /// <summary>
         ///     DI Capable Constructor for SMTP message delivery using MimeKit/MailKit
         /// </summary>
