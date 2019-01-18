@@ -13,11 +13,24 @@ namespace ICG.NetCore.Utilities.Email
     public interface ISmtpService
     {
         /// <summary>
+        /// Returns the configured administrator email for the SMTP service
+        /// </summary>
+        string AdminEmail { get; }
+
+        /// <summary>
         ///     Shortcut for sending an email to the administrator, only requiring the subject and body.
         /// </summary>
         /// <param name="subject">The message subject</param>
         /// <param name="bodyHtml">The message body</param>
         void SendMessageToAdministrator(string subject, string bodyHtml);
+
+        /// <summary>
+        /// Sends a message to the administrator as well as the additional contacts provided.
+        /// </summary>
+        /// <param name="ccAddressList">Additional email addresses to add to the CC line</param>
+        /// <param name="subject">The email subject</param>
+        /// <param name="bodyHtml">The HTML content of the email</param>
+        void SendMessageToAdministrator(IEnumerable<string> ccAddressList, string subject, string bodyHtml);
 
         /// <summary>
         ///     Sends a message to the specified recipient, with the supplied subject and body
@@ -44,6 +57,9 @@ namespace ICG.NetCore.Utilities.Email
         private readonly IMimeMessageFactory _mimeMessageFactory;
         private readonly IMimeKitService _mimeKitService;
 
+        /// <inheritdoc />
+        public string AdminEmail => _serviceOptions?.AdminEmail;
+        
         /// <summary>
         ///     DI Capable Constructor for SMTP message delivery using MimeKit/MailKit
         /// </summary>
@@ -63,6 +79,12 @@ namespace ICG.NetCore.Utilities.Email
         {
             //Force to address
             SendMessage(_serviceOptions.AdminEmail, null, subject, bodyHtml);
+        }
+
+        /// <inheritdoc />
+        public void SendMessageToAdministrator(IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        {
+            SendMessage(_serviceOptions.AdminEmail, ccAddressList, subject, bodyHtml);
         }
 
         /// <inheritdoc />
