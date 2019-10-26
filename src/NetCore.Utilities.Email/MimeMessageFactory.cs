@@ -30,6 +30,21 @@ namespace ICG.NetCore.Utilities.Email
         /// <param name="bodyHtml">The HTML body contents</param>
         /// <returns></returns>
         MimeMessage CreateFromMessage(string from, string to, IEnumerable<string> cc, string subject, string bodyHtml);
+
+        /// <summary>
+        ///  Creates a message with an attachment
+        /// </summary>
+        /// <param name="from">The from address for the message</param>
+        /// <param name="to">The to address for the message</param>
+        /// <param name="cc">The address(ses) to add a CC's</param>
+        /// <param name="subject">The subject of the message</param>
+        /// <param name="fileContent">Attachment Content</param>
+        /// <param name="fileName">Attachment file name</param>
+        /// <param name="bodyHtml">The HTML body contents</param>
+        /// <returns></returns>
+        MimeMessage CreateFromMessageWithAttachment(string fromAddress, string toAddress, IEnumerable<string> cc,
+            string subject, byte[] fileContent,
+            string fileName, string bodyHtml);
     }
 
     /// <inheritdoc />
@@ -84,6 +99,39 @@ namespace ICG.NetCore.Utilities.Email
 
             toSend.Subject = subject;
             var bodyBuilder = new BodyBuilder {HtmlBody = bodyHtml};
+            toSend.Body = bodyBuilder.ToMessageBody();
+            return toSend;
+        }
+
+        public MimeMessage CreateFromMessageWithAttachment(string fromAddress, string toAddress, IEnumerable<string> cc, string subject, byte[] fileContent,
+            string fileName, string bodyHtml)
+        {
+            //Validate inputs
+            if (string.IsNullOrEmpty(fromAddress))
+                throw new ArgumentNullException(nameof(fromAddress));
+            if (string.IsNullOrEmpty(toAddress))
+                throw new ArgumentNullException(nameof(toAddress));
+            if (fileContent == null)
+                throw new ArgumentNullException(nameof(fileContent));
+
+            //Convert
+            var toSend = new MimeMessage();
+            toSend.From.Add(new MailboxAddress(fromAddress));
+            toSend.To.Add(new MailboxAddress(toAddress));
+            toSend.Subject = subject;
+            //Add CC's if needed
+            if (cc != null)
+                foreach (var item in cc)
+                    try
+                    {
+                        toSend.Cc.Add(new MailboxAddress(item));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Error adding {item} to email copy list");
+                    }
+            var bodyBuilder = new BodyBuilder { HtmlBody = bodyHtml };
+            bodyBuilder.Attachments.Add(fileName, fileContent);
             toSend.Body = bodyBuilder.ToMessageBody();
             return toSend;
         }
