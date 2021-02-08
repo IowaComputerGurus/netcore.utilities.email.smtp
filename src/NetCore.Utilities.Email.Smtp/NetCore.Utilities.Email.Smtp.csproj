@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>ICG.NetCore.Utilities.Email.Smtp</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -15,9 +15,9 @@
     <Title>NetCore Utilities Email SMTP</Title>
     <Description>A library providing an easy to use set of functions rounding the SMTPClient.</Description>
     <Copyright>Copyright 2019, IowaComputerGurus All Rights Reserved</Copyright>
-    <PackageProjectUrl>https://github.com/IowaComputerGurus/netcore.utilities.email</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/IowaComputerGurus/netcore.utilities.email.smtp</PackageProjectUrl>
     <PackageTags>aspnetcore;utility;email</PackageTags>
-    <RepositoryUrl>https://github.com/IowaComputerGurus/netcore.utilities.email</RepositoryUrl>
+    <RepositoryUrl>https://github.com/IowaComputerGurus/netcore.utilities.email.smtp</RepositoryUrl>
     <Authors>MitchelSellers;IowaComputerGurus</Authors>
     <Owners>IowaComputerGurus</Owners>
     <PackageIconUrl>https://raw.githubusercontent.com/IowaComputerGurus/netcore.utilities.email.smtp/master/icgAppIcon.png</PackageIconUrl>
@@ -25,11 +25,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="2.1.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
+    <PackageReference Include="MailKit" Version="2.10.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
