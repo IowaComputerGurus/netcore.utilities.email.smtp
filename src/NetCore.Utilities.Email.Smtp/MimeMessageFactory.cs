@@ -56,9 +56,9 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         ///     Default constructor with DI
         /// </summary>
         /// <param name="factory">A logger factory for debug logging</param>
-        public MimeMessageFactory(ILoggerFactory factory)
+        public MimeMessageFactory(ILogger logger)
         {
-            _logger = factory.CreateLogger<MimeMessageFactory>();
+            _logger = logger;
         }
 
         /// <inheritdoc />
@@ -94,7 +94,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"Error adding {item} to email copy list");
+                        _logger.LogWarning(ex, $"Unable to add {item} to email copy list");
                     }
 
             toSend.Subject = subject;
@@ -112,8 +112,14 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                 throw new ArgumentNullException(nameof(fromAddress));
             if (string.IsNullOrEmpty(toAddress))
                 throw new ArgumentNullException(nameof(toAddress));
+            if (string.IsNullOrEmpty(subject))
+                throw new ArgumentNullException(nameof(subject));
             if (fileContent == null)
                 throw new ArgumentNullException(nameof(fileContent));
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException(nameof(fileName));
+            if (string.IsNullOrEmpty(bodyHtml))
+                throw new ArgumentNullException(nameof(bodyHtml));
 
             //Convert
             var toSend = new MimeMessage();
@@ -129,7 +135,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"Error adding {item} to email copy list");
+                        _logger.LogWarning(ex, $"Unable to add {item} to email copy list");
                     }
             var bodyBuilder = new BodyBuilder { HtmlBody = bodyHtml };
             bodyBuilder.Attachments.Add(fileName, fileContent);
