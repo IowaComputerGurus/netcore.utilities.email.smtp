@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace ICG.NetCore.Utilities.Email.Smtp
@@ -50,15 +52,21 @@ namespace ICG.NetCore.Utilities.Email.Smtp
     /// <inheritdoc />
     public class MimeMessageFactory : IMimeMessageFactory
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly SmtpServiceOptions _serviceOptions;
         private readonly ILogger _logger;
 
         /// <summary>
         ///     Default constructor with DI
         /// </summary>
-        /// <param name="factory">A logger factory for debug logging</param>
-        public MimeMessageFactory(ILoggerFactory factory)
+        /// <param name="serviceOptions">Configuration options</param>
+        /// <param name="logger">An instance of ILogger for recording</param>
+        /// <param name="hostingEnvironment">Current environment information</param>
+        public MimeMessageFactory(IOptions<SmtpServiceOptions> serviceOptions, ILogger logger, IHostingEnvironment hostingEnvironment)
         {
-            _logger = factory.CreateLogger<MimeMessageFactory>();
+            _serviceOptions = serviceOptions.Value;
+            _logger = logger;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         /// <inheritdoc />
@@ -94,10 +102,13 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"Error adding {item} to email copy list");
+                        _logger.LogWarning(ex, $"Unable to add {item} to email copy list");
                     }
 
-            toSend.Subject = subject;
+            if (_serviceOptions.AddEnvironmentSuffix && !_hostingEnvironment.IsProduction())
+                toSend.Subject = $"{subject} ({_hostingEnvironment.EnvironmentName})";
+            else
+                toSend.Subject = subject;
             var bodyBuilder = new BodyBuilder {HtmlBody = bodyHtml};
             toSend.Body = bodyBuilder.ToMessageBody();
             return toSend;
@@ -112,14 +123,23 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                 throw new ArgumentNullException(nameof(fromAddress));
             if (string.IsNullOrEmpty(toAddress))
                 throw new ArgumentNullException(nameof(toAddress));
+            if (string.IsNullOrEmpty(subject))
+                throw new ArgumentNullException(nameof(subject));
             if (fileContent == null)
                 throw new ArgumentNullException(nameof(fileContent));
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException(nameof(fileName));
+            if (string.IsNullOrEmpty(bodyHtml))
+                throw new ArgumentNullException(nameof(bodyHtml));
 
             //Convert
             var toSend = new MimeMessage();
             toSend.From.Add(MailboxAddress.Parse(fromAddress));
             toSend.To.Add(MailboxAddress.Parse(toAddress));
-            toSend.Subject = subject;
+            if (_serviceOptions.AddEnvironmentSuffix && !_hostingEnvironment.IsProduction())
+                toSend.Subject = $"{subject} ({_hostingEnvironment.EnvironmentName})";
+            else
+                toSend.Subject = subject;
             //Add CC's if needed
             if (cc != null)
                 foreach (var item in cc)
@@ -129,7 +149,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"Error adding {item} to email copy list");
+                        _logger.LogWarning(ex, $"Unable to add {item} to email copy list");
                     }
             var bodyBuilder = new BodyBuilder { HtmlBody = bodyHtml };
             bodyBuilder.Attachments.Add(fileName, fileContent);

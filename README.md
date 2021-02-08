@@ -4,8 +4,12 @@ This library provides an easy to use implmentation of SMTP based email delivery 
 This package depends on the ICG.NetCore.Utilities.Email project for template implementation 
 
 ## Build Status
-Master Branch ![Master Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email.Smtp?branchName=master)
-Develop Branch ![Develop Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email.Smtp?branchName=develop)
+
+| Branch | Status |
+| --- | --- |
+] Master | ![Master Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email%20Smtp?branchName=master) |
+| Develop | ![Develop Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email%20Smtp?branchName=develop)
+
 
 ## SonarCloud Analysis
 
