@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace ICG.NetCore.Utilities.Email
+namespace ICG.NetCore.Utilities.Email.Smtp
 {
     /// <summary>
     ///     A factory for building MimeMessages based on user supplied inputs
@@ -34,8 +34,8 @@ namespace ICG.NetCore.Utilities.Email
         /// <summary>
         ///  Creates a message with an attachment
         /// </summary>
-        /// <param name="from">The from address for the message</param>
-        /// <param name="to">The to address for the message</param>
+        /// <param name="fromAddress">The from address for the message</param>
+        /// <param name="toAddress">The to address for the message</param>
         /// <param name="cc">The address(ses) to add a CC's</param>
         /// <param name="subject">The subject of the message</param>
         /// <param name="fileContent">Attachment Content</param>
@@ -82,15 +82,15 @@ namespace ICG.NetCore.Utilities.Email
 
             //Convert
             var toSend = new MimeMessage();
-            toSend.From.Add(new MailboxAddress(from));
-            toSend.To.Add(new MailboxAddress(to));
+            toSend.From.Add(MailboxAddress.Parse(from));
+            toSend.To.Add(MailboxAddress.Parse(to));
 
             //Add CC's if needed
             if (cc != null)
                 foreach (var item in cc)
                     try
                     {
-                        toSend.Cc.Add(new MailboxAddress(item));
+                        toSend.Cc.Add(MailboxAddress.Parse(item));
                     }
                     catch (Exception ex)
                     {
@@ -103,6 +103,7 @@ namespace ICG.NetCore.Utilities.Email
             return toSend;
         }
 
+        /// <inheritdoc />
         public MimeMessage CreateFromMessageWithAttachment(string fromAddress, string toAddress, IEnumerable<string> cc, string subject, byte[] fileContent,
             string fileName, string bodyHtml)
         {
@@ -116,15 +117,15 @@ namespace ICG.NetCore.Utilities.Email
 
             //Convert
             var toSend = new MimeMessage();
-            toSend.From.Add(new MailboxAddress(fromAddress));
-            toSend.To.Add(new MailboxAddress(toAddress));
+            toSend.From.Add(MailboxAddress.Parse(fromAddress));
+            toSend.To.Add(MailboxAddress.Parse(toAddress));
             toSend.Subject = subject;
             //Add CC's if needed
             if (cc != null)
                 foreach (var item in cc)
                     try
                     {
-                        toSend.Cc.Add(new MailboxAddress(item));
+                        toSend.Cc.Add(MailboxAddress.Parse(item));
                     }
                     catch (Exception ex)
                     {

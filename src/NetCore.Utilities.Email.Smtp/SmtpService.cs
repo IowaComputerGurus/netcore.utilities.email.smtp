@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 
-namespace ICG.NetCore.Utilities.Email
+namespace ICG.NetCore.Utilities.Email.Smtp
 {
     /// <summary>
     ///     Represents an SMTP service that can be used to send outbound email messages.  Internally the current concrete
@@ -52,9 +52,8 @@ namespace ICG.NetCore.Utilities.Email
         /// <summary>
         ///  Creates a message with an attachment
         /// </summary>
-        /// <param name="from">The from address for the message</param>
-        /// <param name="to">The to address for the message</param>
-        /// <param name="cc">The address(ses) to add a CC's</param>
+        /// <param name="toAddress">The to address for the message</param>
+        /// <param name="ccAddressList">The address(ses) to add a CC's</param>
         /// <param name="subject">The subject of the message</param>
         /// <param name="fileContent">Attachment Content</param>
         /// <param name="fileName">Attachment file name</param>
@@ -119,6 +118,7 @@ namespace ICG.NetCore.Utilities.Email
             _mimeKitService.SendEmail(toSend);
         }
 
+        /// <inheritdoc />
         public void SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject, byte[] fileContent, string fileName, string bodyHtml)
         {
             //Covert to a mime message
