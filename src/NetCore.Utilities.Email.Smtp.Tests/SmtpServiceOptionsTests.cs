@@ -1,7 +1,7 @@
 ﻿using ICG.NetCore.Utilities.UnitTesting;
 using Xunit;
 
-namespace ICG.NetCore.Utilities.Email.Tests
+namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 {
     public class SmtpServiceOptionsTests : AbstractModelTest
     {

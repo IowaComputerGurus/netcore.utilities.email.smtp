@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace ICG.NetCore.Utilities.Email
+namespace ICG.NetCore.Utilities.Email.Smtp
 {
     /// <summary>
     ///     A factory for building MimeMessages based on user supplied inputs

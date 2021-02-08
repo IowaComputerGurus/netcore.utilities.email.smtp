@@ -1,23 +1,25 @@
-# NetCore.Utilities.Email ![](https://img.shields.io/github/license/iowacomputergurus/netcore.utilities.email.svg)
-A utility to assist in creating Excel spreadsheets in .NET Core and ASP.NET Core applications using the EPPlus.Core library.  This utility allows you to export .NET Object to Excel by simply adding metadata information regarding the desired column formats, title etc.  Allowing quick & consistent excel exports.
+# NetCore.Utilities.Email.Smtp ![](https://img.shields.io/github/license/iowacomputergurus/netcore.utilities.email.smtp.svg)
+This library provides an easy to use implmentation of SMTP based email delivery using the MailKit library internally.  This abstraction with proper interfaces allows email implementation inside of your project with little effort and easy to manage integration.
+
+This package depends on the ICG.NetCore.Utilities.Email project for template implementation 
 
 ## Build Status
-Master Branch ![Master Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email?branchName=master)
-Develop Branch ![Develop Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email?branchName=develop)
+Master Branch ![Master Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email.Smtp?branchName=master)
+Develop Branch ![Develop Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email.Smtp?branchName=develop)
 
 
 ## NuGet Package Information
-ICG.NetCore.Utilities.Email ![](https://img.shields.io/nuget/v/icg.netcore.utilities.email.svg) ![](https://img.shields.io/nuget/dt/icg.netcore.utilities.email.svg)
+ICG.NetCore.Utilities.Email.Smtp ![](https://img.shields.io/nuget/v/icg.netcore.utilities.email.smtp.svg) ![](https://img.shields.io/nuget/dt/icg.netcore.utilities.email.smtp.svg)
 
 ## Dependencies
-This project depends on the EPPlus.Core NuGet package.  No changes are made to the EPPlus.Core package, and its usage is goverened by its own license agreement.
+This project depends on the (MailKit)[https://github.com/jstedfast/MailKit] NuGet package. 
 
 ## Usage
 
 ## Installation
 Standard installation via HuGet Package Manager
 ```
-Install-Package ICG.NetCore.Utilities.Email
+Install-Package ICG.NetCore.Utilities.Email.Snto
 ```
 
 ## Setup

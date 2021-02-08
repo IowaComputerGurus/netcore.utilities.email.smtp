@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace ICG.NetCore.Utilities.Email
+namespace ICG.NetCore.Utilities.Email.Smtp
 {
     /// <summary>
     /// Service implementation to send emails using MimeKit

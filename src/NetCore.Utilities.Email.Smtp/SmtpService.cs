@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 
-namespace ICG.NetCore.Utilities.Email
+namespace ICG.NetCore.Utilities.Email.Smtp
 {
     /// <summary>
     ///     Represents an SMTP service that can be used to send outbound email messages.  Internally the current concrete

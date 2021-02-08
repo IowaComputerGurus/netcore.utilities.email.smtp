@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace ICG.NetCore.Utilities.Email.Tests
+namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 {
     public class MimeMessageFactoryTests
     {

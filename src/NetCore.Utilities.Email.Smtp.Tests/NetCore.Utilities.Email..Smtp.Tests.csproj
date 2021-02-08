@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>ICG.NetCore.Utilities.Email.Tests</RootNamespace>
+    <RootNamespace>ICG.NetCore.Utilities.Email.Smtp.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetCore.Utilities.Email\NetCore.Utilities.Email.csproj" />
+    <ProjectReference Include="..\NetCore.Utilities.Email.Smtp\NetCore.Utilities.Email.Smtp.csproj" />
   </ItemGroup>
 
 </Project>

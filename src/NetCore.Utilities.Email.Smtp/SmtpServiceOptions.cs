@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ICG.NetCore.Utilities.Email
+namespace ICG.NetCore.Utilities.Email.Smtp
 {
     /// <summary>
     ///     Configuration options for use with the <see cref="SmtpService" />
