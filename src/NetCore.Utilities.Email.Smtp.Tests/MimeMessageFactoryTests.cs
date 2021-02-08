@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Resources;
 using System.Text;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -13,11 +15,24 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
     {
         private readonly Mock<ILogger> _loggerMock;
         private readonly IMimeMessageFactory _factory;
+        private readonly Mock<IHostingEnvironment> _hostingEnvironment;
+        private readonly SmtpServiceOptions _options = new SmtpServiceOptions()
+        {
+            AdminEmail = "admin@test.com",
+            Port = 15,
+            UseSsl = true,
+            SenderUsername = "User",
+            SenderPassword = "Password",
+            Server = "Server",
+            AddEnvironmentSuffix = false,
+            UseDefaultTemplate = false
+        };
 
         public MimeMessageFactoryTests()
         {
             _loggerMock = new Mock<ILogger>();
-            _factory = new MimeMessageFactory(_loggerMock.Object);
+            _hostingEnvironment = new Mock<IHostingEnvironment>();
+            _factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(_options), _loggerMock.Object, _hostingEnvironment.Object);
         }
 
 
@@ -111,7 +126,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var to = "test@test.com";
             var bodyHtml = "<p></p>";
             var subject = "Test";
-            var cc = new List<string> {"testing@tester.com"};
+            var cc = new List<string> { "testing@tester.com" };
 
             //Act
             var result = _factory.CreateFromMessage(from, to, cc, subject, bodyHtml);
@@ -319,7 +334,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var fileContent = Encoding.ASCII.GetBytes("Testing");
             var fileName = "text.txt";
             var bodyHtml = "<p>Hello!</p>";
-            var cc = new List<string> {"copies@you.com"};
+            var cc = new List<string> { "copies@you.com" };
 
             //Act
             var result =
@@ -355,6 +370,59 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                     It.IsAny<Exception>(),
                     (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
                 Times.Once);
+        }
+        #endregion
+
+        #region Settings Based Custom Subject
+
+        [Fact]
+        public void CreateFromMessage_ShouldModifyUrl_WhenSuffixEnabledAndNotProduction()
+        {
+            //Arrange
+            var options = new SmtpServiceOptions()
+            {
+                AddEnvironmentSuffix = true,
+                UseDefaultTemplate = false
+            };
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object, _hostingEnvironment.Object );
+            _hostingEnvironment.Setup(e => e.EnvironmentName).Returns("Development");
+            var from = "from@test.com";
+            var to = "to@test.com";
+            var subject = "Subject";
+            var bodyHtml = "<p>Test</p>";
+            var expectedSubject = "Subject (Development)";
+
+            //Act
+            var result = factory.CreateFromMessage(from, to, null, subject, bodyHtml);
+
+            //Assert
+            Assert.Equal(expectedSubject, result.Subject);
+        }
+
+        [Fact]
+        public void CreateFromMessageWithAttachment_ShouldModifyUrl_WhenSuffixEnabledAndNotProduction()
+        {
+            //Arrange
+            var options = new SmtpServiceOptions()
+            {
+                AddEnvironmentSuffix = true,
+                UseDefaultTemplate = false
+            };
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object, _hostingEnvironment.Object);
+            _hostingEnvironment.Setup(e => e.EnvironmentName).Returns("Development");
+            var from = "from@test.com";
+            var to = "to@test.com";
+            var fileContent = Encoding.ASCII.GetBytes("Testing");
+            var fileName = "test.txt";
+            var subject = "Subject";
+            var bodyHtml = "<p>Test</p>";
+            var expectedSubject = "Subject (Development)";
+
+            //Act
+            var result = factory.CreateFromMessageWithAttachment(from, to, null, subject, fileContent, fileName, bodyHtml);
+
+            //Assert
+            Assert.Equal(expectedSubject, result.Subject);
         }
         #endregion
     }
