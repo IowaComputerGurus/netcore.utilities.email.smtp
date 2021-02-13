@@ -112,6 +112,10 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                 toSend.Subject = $"{subject} ({_hostingEnvironment.EnvironmentName})";
             else
                 toSend.Subject = subject;
+
+            if (_serviceOptions.AlwaysTemplateEmails)
+                bodyHtml = _emailTemplateFactory.BuildEmailContent(toSend.Subject, bodyHtml);
+
             var bodyBuilder = new BodyBuilder {HtmlBody = bodyHtml};
             toSend.Body = bodyBuilder.ToMessageBody();
             return toSend;
@@ -139,10 +143,12 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             var toSend = new MimeMessage();
             toSend.From.Add(MailboxAddress.Parse(fromAddress));
             toSend.To.Add(MailboxAddress.Parse(toAddress));
+
             if (_serviceOptions.AddEnvironmentSuffix && !_hostingEnvironment.IsProduction())
                 toSend.Subject = $"{subject} ({_hostingEnvironment.EnvironmentName})";
             else
                 toSend.Subject = subject;
+
             //Add CC's if needed
             if (cc != null)
                 foreach (var item in cc)
@@ -154,6 +160,10 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                     {
                         _logger.LogWarning(ex, $"Unable to add {item} to email copy list");
                     }
+
+            if (_serviceOptions.AlwaysTemplateEmails)
+                bodyHtml = _emailTemplateFactory.BuildEmailContent(toSend.Subject, bodyHtml);
+
             var bodyBuilder = new BodyBuilder { HtmlBody = bodyHtml };
             bodyBuilder.Attachments.Add(fileName, fileContent);
             toSend.Body = bodyBuilder.ToMessageBody();

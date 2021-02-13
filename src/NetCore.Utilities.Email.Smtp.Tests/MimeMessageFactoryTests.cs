@@ -425,5 +425,66 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             Assert.Equal(expectedSubject, result.Subject);
         }
         #endregion
+
+        #region Settings Based Templating
+
+        [Fact]
+        public void CreateFromMessage_ShouldSendToTemplateFactory_WhenAlwaysUseTemplatedEmail()
+        {
+            //Arrange
+            var options = new SmtpServiceOptions
+            {
+                AlwaysTemplateEmails = true
+            };
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object,
+                _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);
+            var from = "from@test.com";
+            var to = "to@test.com";
+            var subject = "Subject";
+            var bodyHtml = "<p>Test</p>";
+            var updatedHtml = "<h1>Templated</h1><p>Test</p>";
+            _emailTemplateFactoryMock
+                .Setup(e => e.BuildEmailContent(subject, bodyHtml, "", ""))
+                .Returns(updatedHtml)
+                .Verifiable();
+
+            //Act
+            var result = factory.CreateFromMessage(from, to, null, subject, bodyHtml);
+
+            //Assert
+            _emailTemplateFactoryMock.Verify();
+            Assert.Equal(updatedHtml, result.HtmlBody);
+        }
+
+        [Fact]
+        public void CreateFromMessageWithAttachment_ShouldSendToTemplateFactory_WhenAlwaysUseTemplatedEmail()
+        {
+            //Arrange
+            var options = new SmtpServiceOptions
+            {
+                AlwaysTemplateEmails = true
+            };
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object,
+                _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);
+            var from = "from@test.com";
+            var to = "to@test.com";
+            var subject = "Subject";
+            var attachment = Encoding.ASCII.GetBytes("Testing");
+            var fileName = "file.txt";
+            var bodyHtml = "<p>Test</p>";
+            var updatedHtml = "<h1>Templated</h1><p>Test</p>";
+            _emailTemplateFactoryMock
+                .Setup(e => e.BuildEmailContent(subject, bodyHtml, "", ""))
+                .Returns(updatedHtml)
+                .Verifiable();
+
+            //Act
+            var result = factory.CreateFromMessageWithAttachment(from, to, null, subject, attachment, fileName, bodyHtml);
+
+            //Assert
+            _emailTemplateFactoryMock.Verify();
+            Assert.Equal(updatedHtml, result.HtmlBody);
+        }
+        #endregion
     }
 }
