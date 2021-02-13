@@ -30,8 +30,9 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="cc">The address(ses) to add a CC's</param>
         /// <param name="subject">The subject of the message</param>
         /// <param name="bodyHtml">The HTML body contents</param>
+        /// <param name="templateName">The optional custom template to override with</param>
         /// <returns></returns>
-        MimeMessage CreateFromMessage(string from, string to, IEnumerable<string> cc, string subject, string bodyHtml);
+        MimeMessage CreateFromMessage(string from, string to, IEnumerable<string> cc, string subject, string bodyHtml, string templateName = "");
 
         /// <summary>
         ///  Creates a message with an attachment
@@ -43,16 +44,18 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="fileContent">Attachment Content</param>
         /// <param name="fileName">Attachment file name</param>
         /// <param name="bodyHtml">The HTML body contents</param>
+        /// <param name="templateName">The optional custom template to override with</param>
         /// <returns></returns>
         MimeMessage CreateFromMessageWithAttachment(string fromAddress, string toAddress, IEnumerable<string> cc,
             string subject, byte[] fileContent,
-            string fileName, string bodyHtml);
+            string fileName, string bodyHtml, string templateName = "");
     }
 
     /// <inheritdoc />
     public class MimeMessageFactory : IMimeMessageFactory
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IEmailTemplateFactory _emailTemplateFactory;
         private readonly SmtpServiceOptions _serviceOptions;
         private readonly ILogger _logger;
 
@@ -62,11 +65,13 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="serviceOptions">Configuration options</param>
         /// <param name="logger">An instance of ILogger for recording</param>
         /// <param name="hostingEnvironment">Current environment information</param>
-        public MimeMessageFactory(IOptions<SmtpServiceOptions> serviceOptions, ILogger logger, IHostingEnvironment hostingEnvironment)
+        /// <param name="emailTemplateFactory">The ICG Email Template Factory for formatting messages</param>
+        public MimeMessageFactory(IOptions<SmtpServiceOptions> serviceOptions, ILogger logger, IHostingEnvironment hostingEnvironment, IEmailTemplateFactory emailTemplateFactory)
         {
             _serviceOptions = serviceOptions.Value;
             _logger = logger;
             _hostingEnvironment = hostingEnvironment;
+            _emailTemplateFactory = emailTemplateFactory;
         }
 
         /// <inheritdoc />
@@ -76,7 +81,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         }
 
         /// <inheritdoc />
-        public MimeMessage CreateFromMessage(string from, string to, IEnumerable<string> cc, string subject, string bodyHtml)
+        public MimeMessage CreateFromMessage(string from, string to, IEnumerable<string> cc, string subject, string bodyHtml, string templateName = "")
         {
             //Validate inputs
             if (string.IsNullOrEmpty(from))
@@ -109,6 +114,14 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                 toSend.Subject = $"{subject} ({_hostingEnvironment.EnvironmentName})";
             else
                 toSend.Subject = subject;
+
+            //Perform templating
+            if (_serviceOptions.AlwaysTemplateEmails && string.IsNullOrEmpty(templateName))
+                bodyHtml = _emailTemplateFactory.BuildEmailContent(toSend.Subject, bodyHtml);
+            else if (!string.IsNullOrEmpty(templateName))
+                bodyHtml = _emailTemplateFactory.BuildEmailContent(toSend.Subject, bodyHtml,
+                    templateName: templateName);
+
             var bodyBuilder = new BodyBuilder {HtmlBody = bodyHtml};
             toSend.Body = bodyBuilder.ToMessageBody();
             return toSend;
@@ -116,7 +129,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
 
         /// <inheritdoc />
         public MimeMessage CreateFromMessageWithAttachment(string fromAddress, string toAddress, IEnumerable<string> cc, string subject, byte[] fileContent,
-            string fileName, string bodyHtml)
+            string fileName, string bodyHtml, string templateName = "")
         {
             //Validate inputs
             if (string.IsNullOrEmpty(fromAddress))
@@ -136,10 +149,12 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             var toSend = new MimeMessage();
             toSend.From.Add(MailboxAddress.Parse(fromAddress));
             toSend.To.Add(MailboxAddress.Parse(toAddress));
+
             if (_serviceOptions.AddEnvironmentSuffix && !_hostingEnvironment.IsProduction())
                 toSend.Subject = $"{subject} ({_hostingEnvironment.EnvironmentName})";
             else
                 toSend.Subject = subject;
+
             //Add CC's if needed
             if (cc != null)
                 foreach (var item in cc)
@@ -151,6 +166,14 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                     {
                         _logger.LogWarning(ex, $"Unable to add {item} to email copy list");
                     }
+
+            //Perform templating
+            if (_serviceOptions.AlwaysTemplateEmails && string.IsNullOrEmpty(templateName))
+                bodyHtml = _emailTemplateFactory.BuildEmailContent(toSend.Subject, bodyHtml);
+            else if (!string.IsNullOrEmpty(templateName))
+                bodyHtml = _emailTemplateFactory.BuildEmailContent(toSend.Subject, bodyHtml,
+                    templateName: templateName);
+
             var bodyBuilder = new BodyBuilder { HtmlBody = bodyHtml };
             bodyBuilder.Attachments.Add(fileName, fileContent);
             toSend.Body = bodyBuilder.ToMessageBody();

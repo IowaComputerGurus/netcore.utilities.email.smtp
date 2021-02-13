@@ -7,7 +7,7 @@ This package depends on the ICG.NetCore.Utilities.Email project for template imp
 
 | Branch | Status |
 | --- | --- |
-] Master | ![Master Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email%20Smtp?branchName=master) |
+| Master | ![Master Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email%20Smtp?branchName=master) |
 | Develop | ![Develop Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email%20Smtp?branchName=develop)
 
 
@@ -23,25 +23,59 @@ This package depends on the ICG.NetCore.Utilities.Email project for template imp
 ICG.NetCore.Utilities.Email.Smtp ![](https://img.shields.io/nuget/v/icg.netcore.utilities.email.smtp.svg) ![](https://img.shields.io/nuget/dt/icg.netcore.utilities.email.smtp.svg)
 
 ## Dependencies
-This project depends on the (MailKit)[https://github.com/jstedfast/MailKit] NuGet package. 
+The following additional NuGet packages are installed with this extension.
+
+* [MailKit](https://github.com/jstedfast/MailKit) - For email delivery
+* [ICG NET Core Utilieis Email](https://github.com/IowaComputerGurus/netcore.utilities.email) - For Email Template Configuration
 
 ## Usage
 
 ## Installation
 Standard installation via HuGet Package Manager
 ```
-Install-Package ICG.NetCore.Utilities.Email.Snto
+Install-Package ICG.NetCore.Utilities.Email.Smtp
 ```
 
-## Setup
+## Setup & Configuration Options
 To setup the needed dependency injection items for this library, add the following line in your DI setup.
 ```
 services.UseIcgNetCoreUtilitiesEmail();
 ```
 
+Additionally you must specify the needed configuration elements within your AppSettings.json file
+
+```
+  "SmtpServiceOptions": {
+    "AdminEmail": "test@test.com",
+    "Server": "test.smtp.com",
+    "Port": "527",
+    "UseSsl": true,
+    "SenderUsername": "MySender",
+    "SenderPassword": "Password",
+    "AlwaysTemplateEmails": true,
+    "AddEnvironmentSuffix": true
+  },
+  "EmailTemplateSettings": {
+    "DefaultTemplatePath": "Template.html",
+    "AdditionalTemplates": { "SpecialTemplate": "File.html" }
+  }
+```
+
+| Setting | Description
+| AdminEmail | This is the email address used as the "from" address and also for any usage of the "SendToAdministrator" option
+| Server | The SMTP Server address to use
+| Port | The Port to use for outbound emails
+| UseSsl | Should SSL be used for emails
+| SenderUsername | The username that should be used to connect to SMTP
+| SenderPassword | The password that should be used to connect to SMTP
+| AlwaysTemplateEmails | If selected ALL emails sent will be templated, by default using the "DefaultTemplate" as configured
+| AddEnvironmentSuffix | If selected, all outbound emails sent from non-production addresses will have the environment name added to the end of the subject
+| DefaultTemplatePath | The path, relative to the application root, where the default HTML template can be found for emails
+| AdditionalTemplates | These are name/value pairs of additional templates and totally optional
+
 ## Usage
 
-We are continuing to document, the ISmtpService, is the primary usage point for sending emails.  XML documention is available for all classes.
+Usage is primarly completed by injecting the ISmtpService interface to your respective project.  Inline documentation exists for all API methods.  We will continue to add more to this documentation in the future (PR's Welcome)
 
 ## Related Projects
 

@@ -15,6 +15,9 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="configuration">The configuration instance to load settings</param>
         public static void UseIcgNetCoreUtilitiesEmailSmtp(this IServiceCollection services, IConfiguration configuration)
         {
+            //Register internal services
+            services.UseIcgNetCoreUtilitiesEmail(configuration);
+
             //Bind additional services
             services.AddTransient<IMimeKitService, MimeKitService>();
             services.AddTransient<IMimeMessageFactory, MimeMessageFactory>();

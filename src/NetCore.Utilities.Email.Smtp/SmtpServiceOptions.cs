@@ -46,8 +46,8 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <summary>
         ///     If selected outbound emails will be sent with the default template unless a special template is requested
         /// </summary>
-        [Display(Name = "Use Default Template")]
-        public bool UseDefaultTemplate { get; set; }
+        [Display(Name = "Always Template Emails")]
+        public bool AlwaysTemplateEmails { get; set; }
 
         /// <summary>
         ///     If selected and email sent via a non-production environment the current environment will be added as a suffix
