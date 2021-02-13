@@ -66,7 +66,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var message = "Message";
             var mimeMessage = new MimeMessage();
             _mimeMessageFactoryMock
-                .Setup(f => f.CreateFromMessage(_options.AdminEmail, _options.AdminEmail, null, subject, message))
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, _options.AdminEmail, null, subject, message, ""))
                 .Returns(mimeMessage).Verifiable();
 
             //Act
@@ -86,7 +86,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var cc = new List<string> {"recipient@test.com"};
             var mimeMessage = new MimeMessage();
             _mimeMessageFactoryMock
-                .Setup(f => f.CreateFromMessage(_options.AdminEmail, _options.AdminEmail, cc, subject, message))
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, _options.AdminEmail, cc, subject, message, ""))
                 .Returns(mimeMessage).Verifiable();
 
             //Act
@@ -106,7 +106,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var message = "message";
             var mimeMessage = new MimeMessage();
             _mimeMessageFactoryMock
-                .Setup(f => f.CreateFromMessage(_options.AdminEmail, to, null, subject, message))
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, to, null, subject, message, ""))
                 .Returns(mimeMessage).Verifiable();
 
             //Act
@@ -127,7 +127,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var message = "message";
             var mimeMessage = new MimeMessage();
             _mimeMessageFactoryMock
-                .Setup(f => f.CreateFromMessage(_options.AdminEmail, to, cc, subject, message))
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, to, cc, subject, message, ""))
                 .Returns(mimeMessage).Verifiable();
 
             //Act
@@ -150,11 +150,57 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var message = "message";
             var mimeMessage = new MimeMessage();
             _mimeMessageFactoryMock
-                .Setup(f => f.CreateFromMessageWithAttachment(_options.AdminEmail, to, cc, subject, fileContent, fileName, message))
+                .Setup(f => f.CreateFromMessageWithAttachment(_options.AdminEmail, to, cc, subject, fileContent, fileName, message, ""))
                 .Returns(mimeMessage).Verifiable();
 
             //Act
             _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message);
+
+            //Assets
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+        }
+
+        [Fact]
+        public void SendMessage_ShouldPassOptionalTemplateName_ToMessageMethods()
+        {
+            //Arrange
+            var to = "tester@test.com";
+            var cc = new List<string> { "Person1@test.com" };
+            var subject = "test";
+            var message = "message";
+            var requestedTemplate = "Test";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, to, cc, subject, message, requestedTemplate))
+                .Returns(mimeMessage).Verifiable();
+
+            //Act
+            _service.SendMessage(to, cc, subject, message, requestedTemplate);
+
+            //Assets
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+        }
+
+        [Fact]
+        public void SendMessageWithAttachment_ShouldPassOptionalTemplateName_ToMessageMethods()
+        {
+            //Arrange
+            var to = "tester@test.com";
+            var cc = new List<string> { "Person1@test.com" };
+            var subject = "test";
+            var fileContent = Encoding.ASCII.GetBytes("Testing");
+            var fileName = "test.txt";
+            var message = "message";
+            var requestedTemplate = "Test";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessageWithAttachment(_options.AdminEmail, to, cc, subject, fileContent, fileName, message, requestedTemplate))
+                .Returns(mimeMessage).Verifiable();
+
+            //Act
+            _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message, requestedTemplate);
 
             //Assets
             _mimeMessageFactoryMock.Verify();

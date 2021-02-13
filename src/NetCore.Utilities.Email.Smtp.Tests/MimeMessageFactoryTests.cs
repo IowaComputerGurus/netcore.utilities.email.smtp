@@ -456,6 +456,37 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             Assert.Equal(updatedHtml, result.HtmlBody);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CreateFromMessage_ShouldSendToTemplateFactory_WithCustomTemplate(bool alwaysTemplateSetting)
+        {
+            //Arrange
+            var options = new SmtpServiceOptions
+            {
+                AlwaysTemplateEmails = alwaysTemplateSetting
+            };
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object,
+                _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);
+            var from = "from@test.com";
+            var to = "to@test.com";
+            var subject = "Subject";
+            var bodyHtml = "<p>Test</p>";
+            var requestedTemplate = "testing";
+            var updatedHtml = "<h1>Templated</h1><p>Test</p>";
+            _emailTemplateFactoryMock
+                .Setup(e => e.BuildEmailContent(subject, bodyHtml, "", requestedTemplate))
+                .Returns(updatedHtml)
+                .Verifiable();
+
+            //Act
+            var result = factory.CreateFromMessage(from, to, null, subject, bodyHtml, requestedTemplate);
+
+            //Assert
+            _emailTemplateFactoryMock.Verify();
+            Assert.Equal(updatedHtml, result.HtmlBody);
+        }
+
         [Fact]
         public void CreateFromMessageWithAttachment_ShouldSendToTemplateFactory_WhenAlwaysUseTemplatedEmail()
         {
@@ -480,6 +511,39 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             var result = factory.CreateFromMessageWithAttachment(from, to, null, subject, attachment, fileName, bodyHtml);
+
+            //Assert
+            _emailTemplateFactoryMock.Verify();
+            Assert.Equal(updatedHtml, result.HtmlBody);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CreateFromMessageWithAttachment_ShouldSendToTemplateFactory_WithCustomTemplate(bool alwaysTemplateSetting)
+        {
+            //Arrange
+            var options = new SmtpServiceOptions
+            {
+                AlwaysTemplateEmails = alwaysTemplateSetting
+            };
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object,
+                _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);
+            var from = "from@test.com";
+            var to = "to@test.com";
+            var attachment = Encoding.ASCII.GetBytes("Testing");
+            var fileName = "file.txt";
+            var subject = "Subject";
+            var bodyHtml = "<p>Test</p>";
+            var requestedTemplate = "testing";
+            var updatedHtml = "<h1>Templated</h1><p>Test</p>";
+            _emailTemplateFactoryMock
+                .Setup(e => e.BuildEmailContent(subject, bodyHtml, "", requestedTemplate))
+                .Returns(updatedHtml)
+                .Verifiable();
+
+            //Act
+            var result = factory.CreateFromMessageWithAttachment(from, to, null, subject, attachment, fileName, bodyHtml, requestedTemplate);
 
             //Assert
             _emailTemplateFactoryMock.Verify();

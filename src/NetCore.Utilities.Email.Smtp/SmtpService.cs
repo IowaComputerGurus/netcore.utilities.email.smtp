@@ -47,7 +47,8 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="ccAddressList">Additional CC'ed emails</param>
         /// <param name="subject">The message subject</param>
         /// <param name="bodyHtml">The message body</param>
-        void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml);
+        /// <param name="templateName">The optional custom template to override with</param>
+        void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, string templateName = "");
 
         /// <summary>
         ///  Creates a message with an attachment
@@ -58,9 +59,10 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="fileContent">Attachment Content</param>
         /// <param name="fileName">Attachment file name</param>
         /// <param name="bodyHtml">The HTML body contents</param>
+        /// <param name="templateName">The optional custom template to override with</param>
         /// <returns></returns>
         void SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject,
-            byte[] fileContent, string fileName, string bodyHtml);
+            byte[] fileContent, string fileName, string bodyHtml, string templateName = "");
     }
 
     /// <inheritdoc />
@@ -108,22 +110,22 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         }
 
         /// <inheritdoc />
-        public void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        public void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, string templateName = "")
         {
             //Convert to a mime message
             var toSend = _mimeMessageFactory.CreateFromMessage(_serviceOptions.AdminEmail, toAddress,
-                ccAddressList, subject, bodyHtml);
+                ccAddressList, subject, bodyHtml, templateName);
 
             //Send
             _mimeKitService.SendEmail(toSend);
         }
 
         /// <inheritdoc />
-        public void SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject, byte[] fileContent, string fileName, string bodyHtml)
+        public void SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject, byte[] fileContent, string fileName, string bodyHtml, string templateName = "")
         {
             //Covert to a mime message
             var toSend = _mimeMessageFactory.CreateFromMessageWithAttachment(_serviceOptions.AdminEmail, toAddress,
-                ccAddressList, subject, fileContent, fileName, bodyHtml);
+                ccAddressList, subject, fileContent, fileName, bodyHtml, templateName);
 
             //Send
             _mimeKitService.SendEmail(toSend);
