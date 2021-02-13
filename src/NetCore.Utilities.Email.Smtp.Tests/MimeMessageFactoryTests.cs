@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Resources;
 using System.Text;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,6 +13,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
     {
         private readonly Mock<ILogger> _loggerMock;
         private readonly IMimeMessageFactory _factory;
+        private readonly Mock<IEmailTemplateFactory> _emailTemplateFactoryMock;
         private readonly Mock<IHostingEnvironment> _hostingEnvironment;
         private readonly SmtpServiceOptions _options = new SmtpServiceOptions()
         {
@@ -25,14 +24,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             SenderPassword = "Password",
             Server = "Server",
             AddEnvironmentSuffix = false,
-            UseDefaultTemplate = false
+            AlwaysTemplateEmails = false
         };
 
         public MimeMessageFactoryTests()
         {
             _loggerMock = new Mock<ILogger>();
             _hostingEnvironment = new Mock<IHostingEnvironment>();
-            _factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(_options), _loggerMock.Object, _hostingEnvironment.Object);
+            _emailTemplateFactoryMock = new Mock<IEmailTemplateFactory>();
+            _factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(_options), _loggerMock.Object, _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);
         }
 
 
@@ -382,9 +382,9 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var options = new SmtpServiceOptions()
             {
                 AddEnvironmentSuffix = true,
-                UseDefaultTemplate = false
+                AlwaysTemplateEmails = false
             };
-            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object, _hostingEnvironment.Object );
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object, _hostingEnvironment.Object, _emailTemplateFactoryMock.Object );
             _hostingEnvironment.Setup(e => e.EnvironmentName).Returns("Development");
             var from = "from@test.com";
             var to = "to@test.com";
@@ -406,9 +406,9 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var options = new SmtpServiceOptions()
             {
                 AddEnvironmentSuffix = true,
-                UseDefaultTemplate = false
+                AlwaysTemplateEmails = false
             };
-            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object, _hostingEnvironment.Object);
+            var factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(options), _loggerMock.Object, _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);
             _hostingEnvironment.Setup(e => e.EnvironmentName).Returns("Development");
             var from = "from@test.com";
             var to = "to@test.com";

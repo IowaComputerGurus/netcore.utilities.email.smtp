@@ -53,6 +53,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
     public class MimeMessageFactory : IMimeMessageFactory
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IEmailTemplateFactory _emailTemplateFactory;
         private readonly SmtpServiceOptions _serviceOptions;
         private readonly ILogger _logger;
 
@@ -62,11 +63,13 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="serviceOptions">Configuration options</param>
         /// <param name="logger">An instance of ILogger for recording</param>
         /// <param name="hostingEnvironment">Current environment information</param>
-        public MimeMessageFactory(IOptions<SmtpServiceOptions> serviceOptions, ILogger logger, IHostingEnvironment hostingEnvironment)
+        /// <param name="emailTemplateFactory">The ICG Email Template Factory for formatting messages</param>
+        public MimeMessageFactory(IOptions<SmtpServiceOptions> serviceOptions, ILogger logger, IHostingEnvironment hostingEnvironment, IEmailTemplateFactory emailTemplateFactory)
         {
             _serviceOptions = serviceOptions.Value;
             _logger = logger;
             _hostingEnvironment = hostingEnvironment;
+            _emailTemplateFactory = emailTemplateFactory;
         }
 
         /// <inheritdoc />

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Moq;
@@ -23,7 +20,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             SenderPassword = "Password",
             Server = "Server",
             AddEnvironmentSuffix = false,
-            UseDefaultTemplate = false
+            AlwaysTemplateEmails = false
         };
         private readonly ISmtpService _service;
 
@@ -46,6 +43,19 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Assert
             Assert.Equal(expectedEmail, result);
+        }
+
+        [Fact]
+        public void AdminEmail_ShouldReturnNullWhenNoConfiguration()
+        {
+            //Arrange
+            var testService = new SmtpService(new OptionsWrapper<SmtpServiceOptions>(null), _mimeMessageFactoryMock.Object, _mimeKitServiceMock.Object);
+
+            //Act
+            var result = testService.AdminEmail;
+
+            //Assert
+            Assert.Null(result);
         }
 
         [Fact]
