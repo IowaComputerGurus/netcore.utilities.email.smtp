@@ -14,7 +14,7 @@
     <PackageId>ICG.NetCore.Utilities.Email.Smtp</PackageId>
     <Title>NetCore Utilities Email SMTP</Title>
     <Description>A library providing an easy to use set of functions rounding the SMTPClient.</Description>
-    <Copyright>Copyright 2019, IowaComputerGurus All Rights Reserved</Copyright>
+    <Copyright>Copyright 2021, IowaComputerGurus, Inc. All Rights Reserved</Copyright>
     <PackageProjectUrl>https://github.com/IowaComputerGurus/netcore.utilities.email.smtp</PackageProjectUrl>
     <PackageTags>aspnetcore;utility;email</PackageTags>
     <RepositoryUrl>https://github.com/IowaComputerGurus/netcore.utilities.email.smtp</RepositoryUrl>
@@ -22,6 +22,14 @@
     <Owners>IowaComputerGurus</Owners>
     <PackageIconUrl>https://raw.githubusercontent.com/IowaComputerGurus/netcore.utilities.email.smtp/master/icgAppIcon.png</PackageIconUrl>
     <IsPackable>True</IsPackable>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +40,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
