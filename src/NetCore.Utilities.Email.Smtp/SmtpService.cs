@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 
-namespace ICG.NetCore.Utilities.Email
+namespace ICG.NetCore.Utilities.Email.Smtp
 {
     /// <summary>
     ///     Represents an SMTP service that can be used to send outbound email messages.  Internally the current concrete
@@ -47,21 +47,22 @@ namespace ICG.NetCore.Utilities.Email
         /// <param name="ccAddressList">Additional CC'ed emails</param>
         /// <param name="subject">The message subject</param>
         /// <param name="bodyHtml">The message body</param>
-        void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml);
+        /// <param name="templateName">The optional custom template to override with</param>
+        void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, string templateName = "");
 
         /// <summary>
         ///  Creates a message with an attachment
         /// </summary>
-        /// <param name="from">The from address for the message</param>
-        /// <param name="to">The to address for the message</param>
-        /// <param name="cc">The address(ses) to add a CC's</param>
+        /// <param name="toAddress">The to address for the message</param>
+        /// <param name="ccAddressList">The address(ses) to add a CC's</param>
         /// <param name="subject">The subject of the message</param>
         /// <param name="fileContent">Attachment Content</param>
         /// <param name="fileName">Attachment file name</param>
         /// <param name="bodyHtml">The HTML body contents</param>
+        /// <param name="templateName">The optional custom template to override with</param>
         /// <returns></returns>
         void SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject,
-            byte[] fileContent, string fileName, string bodyHtml);
+            byte[] fileContent, string fileName, string bodyHtml, string templateName = "");
     }
 
     /// <inheritdoc />
@@ -109,21 +110,22 @@ namespace ICG.NetCore.Utilities.Email
         }
 
         /// <inheritdoc />
-        public void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        public void SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, string templateName = "")
         {
             //Convert to a mime message
             var toSend = _mimeMessageFactory.CreateFromMessage(_serviceOptions.AdminEmail, toAddress,
-                ccAddressList, subject, bodyHtml);
+                ccAddressList, subject, bodyHtml, templateName);
 
             //Send
             _mimeKitService.SendEmail(toSend);
         }
 
-        public void SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject, byte[] fileContent, string fileName, string bodyHtml)
+        /// <inheritdoc />
+        public void SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject, byte[] fileContent, string fileName, string bodyHtml, string templateName = "")
         {
             //Covert to a mime message
             var toSend = _mimeMessageFactory.CreateFromMessageWithAttachment(_serviceOptions.AdminEmail, toAddress,
-                ccAddressList, subject, fileContent, fileName, bodyHtml);
+                ccAddressList, subject, fileContent, fileName, bodyHtml, templateName);
 
             //Send
             _mimeKitService.SendEmail(toSend);
