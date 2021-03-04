@@ -1,5 +1,5 @@
 # ICG.NetCore.Utilities.Email.Smtp ![](https://img.shields.io/github/license/iowacomputergurus/netcore.utilities.email.smtp.svg)
-This library provides an easy to use implmentation of SMTP based email delivery using the MailKit library internally.  This abstraction with proper interfaces allows email implementation inside of your project with little effort and easy to manage integration.
+This library provides an easy to use implementation of SMTP based email delivery using the MailKit library internally.  This abstraction with proper interfaces allows email implementation inside of your project with little effort and easy to manage integration.
 
 This package depends on the ICG.NetCore.Utilities.Email project for template implementation 
 
