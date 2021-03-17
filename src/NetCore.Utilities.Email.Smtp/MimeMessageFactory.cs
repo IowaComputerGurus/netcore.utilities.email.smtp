@@ -66,7 +66,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="logger">An instance of ILogger for recording</param>
         /// <param name="hostingEnvironment">Current environment information</param>
         /// <param name="emailTemplateFactory">The ICG Email Template Factory for formatting messages</param>
-        public MimeMessageFactory(IOptions<SmtpServiceOptions> serviceOptions, ILogger logger, IHostingEnvironment hostingEnvironment, IEmailTemplateFactory emailTemplateFactory)
+        public MimeMessageFactory(IOptions<SmtpServiceOptions> serviceOptions, ILogger<MimeMessageFactory> logger, IHostingEnvironment hostingEnvironment, IEmailTemplateFactory emailTemplateFactory)
         {
             _serviceOptions = serviceOptions.Value;
             _logger = logger;

@@ -11,7 +11,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 {
     public class MimeMessageFactoryTests
     {
-        private readonly Mock<ILogger> _loggerMock;
+        private readonly Mock<ILogger<MimeMessageFactory>> _loggerMock;
         private readonly IMimeMessageFactory _factory;
         private readonly Mock<IEmailTemplateFactory> _emailTemplateFactoryMock;
         private readonly Mock<IHostingEnvironment> _hostingEnvironment;
@@ -29,7 +29,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
         public MimeMessageFactoryTests()
         {
-            _loggerMock = new Mock<ILogger>();
+            _loggerMock = new Mock<ILogger<MimeMessageFactory>>();
             _hostingEnvironment = new Mock<IHostingEnvironment>();
             _emailTemplateFactoryMock = new Mock<IEmailTemplateFactory>();
             _factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(_options), _loggerMock.Object, _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);

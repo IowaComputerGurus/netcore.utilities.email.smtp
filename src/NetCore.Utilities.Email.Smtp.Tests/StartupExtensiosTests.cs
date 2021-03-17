@@ -68,7 +68,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Build();
             collection.AddSingleton(new Mock<Microsoft.Extensions.Hosting.IHostingEnvironment>().Object);
             collection.AddSingleton(new Mock<IHostingEnvironment>().Object);
-            collection.AddSingleton(new Mock<ILogger>().Object);
+            collection.AddSingleton(new Mock<ILogger<MimeMessageFactory>>().Object);
             collection.UseIcgNetCoreUtilitiesEmailSmtp(configuration);
             var services = collection.BuildServiceProvider();
 
@@ -90,7 +90,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Build();
             collection.AddSingleton(new Mock<Microsoft.Extensions.Hosting.IHostingEnvironment>().Object);
             collection.AddSingleton(new Mock<IHostingEnvironment>().Object);
-            collection.AddSingleton(new Mock<ILogger>().Object);
+            collection.AddSingleton(new Mock<ILogger<MimeMessageFactory>>().Object);
             collection.UseIcgNetCoreUtilitiesEmailSmtp(configuration);
             var services = collection.BuildServiceProvider();
 
