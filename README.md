@@ -91,5 +91,6 @@ Inline documentation exists for all API methods. We will continue to add more to
 ICG has a number of other related projects as well
 
 * [AspNetCore.Utilities](https://www.github.com/iowacomputergurus/aspnetcore.utilities)
+* [NetCore.Utilities.Email.SendGrid](https://www.github.com/iowacomputergurus/netcore.utilities.email.sendgrid)
 * [NetCore.Utilities.Spreadsheet](https://www.github.com/iowacomputergurus/netcore.utilities.spreadsheet)
 * [NetCore.Utilities.UnitTesting](https://www.github.com/iowacomputergurus/netcore.utilities.unittesting)
