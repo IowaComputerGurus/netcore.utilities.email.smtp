@@ -14,6 +14,12 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         public string AdminEmail { get; set; }
 
         /// <summary>
+        /// An optional name for the administrative user
+        /// </summary>
+        [Display(Name="Admin Name")]
+        public string AdminName { get; set; }
+
+        /// <summary>
         ///     The server for outbound emails
         /// </summary>
         [Display(Name = "Server")]

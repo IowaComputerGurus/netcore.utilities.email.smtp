@@ -22,7 +22,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             AddEnvironmentSuffix = false,
             AlwaysTemplateEmails = false
         };
-        private readonly ISmtpService _service;
+        private readonly IEmailService _service;
 
         public SmtpServiceTests()
         {
@@ -154,7 +154,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message);
+            _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message, null);
 
             //Assets
             _mimeMessageFactoryMock.Verify();
@@ -176,7 +176,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessage(to, cc, subject, message, requestedTemplate);
+            _service.SendMessage(to, cc, subject, message, null, requestedTemplate);
 
             //Assets
             _mimeMessageFactoryMock.Verify();
@@ -200,7 +200,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message, requestedTemplate);
+            _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message, null, requestedTemplate);
 
             //Assets
             _mimeMessageFactoryMock.Verify();

@@ -95,7 +95,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var services = collection.BuildServiceProvider();
 
             //Act
-            var result = services.GetService<ISmtpService>();
+            var result = services.GetService<IEmailService>();
 
             //Assert
             Assert.NotNull(result);
