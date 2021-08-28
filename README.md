@@ -1,7 +1,7 @@
 # ICG.NetCore.Utilities.Email.Smtp ![](https://img.shields.io/github/license/iowacomputergurus/netcore.utilities.email.smtp.svg)
 This library provides an easy to use implementation of SMTP based email delivery using the MailKit library internally.  This abstraction with proper interfaces allows email implementation inside of your project with little effort and easy to manage integration.
 
-This package depends on the ICG.NetCore.Utilities.Email project for template implementation 
+This package depends on the ICG.NetCore.Utilities.Email project for template implementation, as well as the IEmailService interface for Dependency Injection
 
 ## Build Status
 
@@ -29,6 +29,9 @@ The following additional NuGet packages are installed with this extension.
 * [MailKit](https://github.com/jstedfast/MailKit) - For email delivery
 * [ICG NET Core Utilities Email](https://github.com/IowaComputerGurus/netcore.utilities.email) - For Email Template Configuration
 
+## Breaking Changes with 4.x
+In an effort to standardize our Email libraries a common `IEmailService` interface was introduced, at this time the existing `ISmtpService` was removed.
+
 ## Usage
 
 ### Installation
@@ -48,6 +51,7 @@ Additionally you must specify the needed configuration elements within your AppS
 ```
   "SmtpServiceOptions": {
     "AdminEmail": "test@test.com",
+    "AdminName" : "John Smith",
     "Server": "test.smtp.com",
     "Port": 527,
     "UseSsl": true,
@@ -66,6 +70,7 @@ Additionally you must specify the needed configuration elements within your AppS
 | Setting | Description |
 | --- | --- |
 | AdminEmail | This is the email address used as the "from" address and also for any usage of the "SendToAdministrator" option |
+| AdminName | This is the optional name for the sender for all outbound messages |
 | Server | The SMTP Server address to use |
 | Port | The Port to use for outbound emails |
 | UseSsl | Should SSL be used for emails |
@@ -79,17 +84,19 @@ Additionally you must specify the needed configuration elements within your AppS
 
 ### Usage
 
-Usage is primarly completed by injecting the ISmtpService interface to your respective project, one injected emails can be sent with a single line of code. 
+Usage is primarly completed by injecting the `IEmailService` interface to your respective project, one injected emails can be sent with a single line of code. 
 
 ```
-_smtpService.SendEmail("recipient@me.com", "My Subject", "<p>Hello!</p>");
+_service.SendEmail("recipient@me.com", "My Subject", "<p>Hello!</p>");
 ```
+
 Inline documentation exists for all API methods. We will continue to add more to this documentation in the future (PR's Welcome)
 
 ## Related Projects
 
 ICG has a number of other related projects as well
 
+* [NetCore.Utilities](https://www.github.com/iowacomputergurus/netcore.utilities)
 * [AspNetCore.Utilities](https://www.github.com/iowacomputergurus/aspnetcore.utilities)
 * [NetCore.Utilities.Email.SendGrid](https://www.github.com/iowacomputergurus/netcore.utilities.email.sendgrid)
 * [NetCore.Utilities.Spreadsheet](https://www.github.com/iowacomputergurus/netcore.utilities.spreadsheet)

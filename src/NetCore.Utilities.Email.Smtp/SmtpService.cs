@@ -83,7 +83,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             }
 
             //Convert to a mime message
-            var toSend = _mimeMessageFactory.CreateFromMessage(_serviceOptions.AdminEmail, toAddress, ccAddressList,
+            var toSend = _mimeMessageFactory.CreateFromMessage(_serviceOptions.AdminEmail, _serviceOptions.AdminName, toAddress, ccAddressList,
                 subject, bodyHtml, templateName);
             
             //Send
@@ -106,7 +106,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             }
 
             //Covert to a mime message
-            var toSend = _mimeMessageFactory.CreateFromMessageWithAttachment(_serviceOptions.AdminEmail, toAddress,
+            var toSend = _mimeMessageFactory.CreateFromMessageWithAttachment(_serviceOptions.AdminEmail, _serviceOptions.AdminName, toAddress,
                 ccAddressList, subject, fileContent, fileName, bodyHtml, templateName);
 
             //Send
