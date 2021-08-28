@@ -1,4 +1,5 @@
-﻿using ICG.NetCore.Utilities.Email.Smtp;
+﻿using ICG.NetCore.Utilities.Email;
+using ICG.NetCore.Utilities.Email.Smtp;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -21,7 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //Bind additional services
             services.AddTransient<IMimeKitService, MimeKitService>();
             services.AddTransient<IMimeMessageFactory, MimeMessageFactory>();
-            services.AddTransient<ISmtpService, SmtpService>();
+            services.AddTransient<IEmailService, SmtpService>();
             services.Configure<SmtpServiceOptions>(configuration.GetSection(nameof(SmtpServiceOptions)));
         }
     }

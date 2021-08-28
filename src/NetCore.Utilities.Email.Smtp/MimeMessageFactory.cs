@@ -16,28 +16,31 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         ///     Creates a message with the minimum required information
         /// </summary>
         /// <param name="from">The from address for the message</param>
+        /// <param name="fromName">The name that should be used for the sender</param>
         /// <param name="to">The to address for the message</param>
         /// <param name="subject">The subject of the message</param>
         /// <param name="bodyHtml">The HTML body contents</param>
         /// <returns></returns>
-        MimeMessage CreateFromMessage(string from, string to, string subject, string bodyHtml);
+        MimeMessage CreateFromMessage(string from, string fromName, string to, string subject, string bodyHtml);
 
         /// <summary>
         ///     Creates a message with additional CC contacts
         /// </summary>
         /// <param name="from">The from address for the message</param>
+        /// <param name="fromName">The name that should be used for the sender</param>
         /// <param name="to">The to address for the message</param>
         /// <param name="cc">The address(ses) to add a CC's</param>
         /// <param name="subject">The subject of the message</param>
         /// <param name="bodyHtml">The HTML body contents</param>
         /// <param name="templateName">The optional custom template to override with</param>
         /// <returns></returns>
-        MimeMessage CreateFromMessage(string from, string to, IEnumerable<string> cc, string subject, string bodyHtml, string templateName = "");
+        MimeMessage CreateFromMessage(string from, string fromName, string to, IEnumerable<string> cc, string subject, string bodyHtml, string templateName = "");
 
         /// <summary>
         ///  Creates a message with an attachment
         /// </summary>
         /// <param name="fromAddress">The from address for the message</param>
+        /// <param name="fromName">The name that should be used for the sender</param>
         /// <param name="toAddress">The to address for the message</param>
         /// <param name="cc">The address(ses) to add a CC's</param>
         /// <param name="subject">The subject of the message</param>
@@ -46,7 +49,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// <param name="bodyHtml">The HTML body contents</param>
         /// <param name="templateName">The optional custom template to override with</param>
         /// <returns></returns>
-        MimeMessage CreateFromMessageWithAttachment(string fromAddress, string toAddress, IEnumerable<string> cc,
+        MimeMessage CreateFromMessageWithAttachment(string fromAddress, string fromName, string toAddress, IEnumerable<string> cc,
             string subject, byte[] fileContent,
             string fileName, string bodyHtml, string templateName = "");
     }
@@ -75,13 +78,13 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         }
 
         /// <inheritdoc />
-        public MimeMessage CreateFromMessage(string from, string to, string subject, string bodyHtml)
+        public MimeMessage CreateFromMessage(string from, string fromName, string to, string subject, string bodyHtml)
         {
-            return CreateFromMessage(from, to, null, subject, bodyHtml);
+            return CreateFromMessage(from, fromName, to, null, subject, bodyHtml);
         }
 
         /// <inheritdoc />
-        public MimeMessage CreateFromMessage(string from, string to, IEnumerable<string> cc, string subject, string bodyHtml, string templateName = "")
+        public MimeMessage CreateFromMessage(string from, string fromName, string to, IEnumerable<string> cc, string subject, string bodyHtml, string templateName = "")
         {
             //Validate inputs
             if (string.IsNullOrEmpty(from))
@@ -95,7 +98,13 @@ namespace ICG.NetCore.Utilities.Email.Smtp
 
             //Convert
             var toSend = new MimeMessage();
-            toSend.From.Add(MailboxAddress.Parse(from));
+            var fromAddress = MailboxAddress.Parse(from);
+            if (!string.IsNullOrEmpty(fromName))
+            {
+                fromAddress.Name = fromName;
+            }
+
+            toSend.From.Add(fromAddress);
             toSend.To.Add(MailboxAddress.Parse(to));
 
             //Add CC's if needed
@@ -128,7 +137,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         }
 
         /// <inheritdoc />
-        public MimeMessage CreateFromMessageWithAttachment(string fromAddress, string toAddress, IEnumerable<string> cc, string subject, byte[] fileContent,
+        public MimeMessage CreateFromMessageWithAttachment(string fromAddress, string fromName, string toAddress, IEnumerable<string> cc, string subject, byte[] fileContent,
             string fileName, string bodyHtml, string templateName = "")
         {
             //Validate inputs
@@ -147,7 +156,13 @@ namespace ICG.NetCore.Utilities.Email.Smtp
 
             //Convert
             var toSend = new MimeMessage();
-            toSend.From.Add(MailboxAddress.Parse(fromAddress));
+            var from = MailboxAddress.Parse(fromAddress);
+            if (!string.IsNullOrEmpty(fromName))
+            {
+                from.Name = fromName;
+            }
+
+            toSend.From.Add(from);
             toSend.To.Add(MailboxAddress.Parse(toAddress));
 
             if (_serviceOptions.AddEnvironmentSuffix && !_hostingEnvironment.IsProduction())

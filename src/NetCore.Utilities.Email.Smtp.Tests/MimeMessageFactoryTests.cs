@@ -46,7 +46,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var subject = "Test";
 
             //Act
-            var result = _factory.CreateFromMessage(from, to, subject, bodyHtml);
+            var result = _factory.CreateFromMessage(from,string.Empty, to, subject, bodyHtml);
 
             //Assert
             Assert.NotNull(result);
@@ -62,7 +62,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var subject = "Test";
 
             //Act
-            var result = _factory.CreateFromMessage(from, to, subject, bodyHtml);
+            var result = _factory.CreateFromMessage(from, string.Empty, to, subject, bodyHtml);
 
             //Assert
             Assert.NotNull(result.From);
@@ -79,7 +79,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var subject = "Test";
 
             //Act
-            var result = _factory.CreateFromMessage(from, to, subject, bodyHtml);
+            var result = _factory.CreateFromMessage(from, string.Empty, to, subject, bodyHtml);
 
             //Assert
             Assert.Equal(from, result.From[0].ToString());
@@ -95,7 +95,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var subject = "Test";
 
             //Act
-            var result = _factory.CreateFromMessage(from, to, subject, bodyHtml);
+            var result = _factory.CreateFromMessage(from, string.Empty, to, subject, bodyHtml);
 
             //Assert
             Assert.NotNull(result.To);
@@ -112,7 +112,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var subject = "Test";
 
             //Act
-            var result = _factory.CreateFromMessage(from, to, subject, bodyHtml);
+            var result = _factory.CreateFromMessage(from,string.Empty, to, subject, bodyHtml);
 
             //Assert
             Assert.Equal(to, result.To[0].ToString());
@@ -129,7 +129,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var cc = new List<string> { "testing@tester.com" };
 
             //Act
-            var result = _factory.CreateFromMessage(from, to, cc, subject, bodyHtml);
+            var result = _factory.CreateFromMessage(from, string.Empty, to, cc, subject, bodyHtml);
 
             //Assert
             Assert.Equal(cc[0], result.Cc[0].ToString());
@@ -147,7 +147,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var cc = new List<string> { "testing@tester.com", " " };
 
             //Act
-            var result = _factory.CreateFromMessage(from, to, cc, subject, bodyHtml);
+            var result = _factory.CreateFromMessage(from, string.Empty, to, cc, subject, bodyHtml);
 
             //Assert
             Assert.Single(result.Cc);
@@ -172,7 +172,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var bodyHtml = string.Empty;
 
             //Act/Assert
-            Assert.Throws<ArgumentNullException>("from", () => _factory.CreateFromMessage(from, to, subject, bodyHtml));
+            Assert.Throws<ArgumentNullException>("from", () => _factory.CreateFromMessage(from, string.Empty, to, subject, bodyHtml));
         }
 
         [Fact]
@@ -185,7 +185,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var bodyHtml = string.Empty;
 
             //Act/Assert
-            Assert.Throws<ArgumentNullException>("to", () => _factory.CreateFromMessage(from, to, subject, bodyHtml));
+            Assert.Throws<ArgumentNullException>("to", () => _factory.CreateFromMessage(from, string.Empty, to, subject, bodyHtml));
         }
 
         [Fact]
@@ -199,7 +199,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act/Assert
             Assert.Throws<ArgumentNullException>("subject",
-                () => _factory.CreateFromMessage(from, to, subject, bodyHtml));
+                () => _factory.CreateFromMessage(from, string.Empty, to, subject, bodyHtml));
         }
 
         [Fact]
@@ -213,7 +213,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act/Assert
             Assert.Throws<ArgumentNullException>("bodyHtml",
-                () => _factory.CreateFromMessage(from, to, subject, bodyHtml));
+                () => _factory.CreateFromMessage(from, string.Empty, to, subject, bodyHtml));
         }
 
         #region CreateFromMessageWithAttachment
@@ -225,7 +225,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             Assert.Throws<ArgumentNullException>("fromAddress",
-                () => _factory.CreateFromMessageWithAttachment(null, null, null, null, null,
+                () => _factory.CreateFromMessageWithAttachment(null, string.Empty, null, null, null, null,
                     null, null));
         }
 
@@ -237,7 +237,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             Assert.Throws<ArgumentNullException>("toAddress",
-                () => _factory.CreateFromMessageWithAttachment(from, null, null, null, null,
+                () => _factory.CreateFromMessageWithAttachment(from, string.Empty, null, null, null, null,
                     null, null));
         }
 
@@ -250,7 +250,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             Assert.Throws<ArgumentNullException>("subject",
-                () => _factory.CreateFromMessageWithAttachment(from, to, null, null, null,
+                () => _factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, null, null,
                     null, null));
         }
 
@@ -264,7 +264,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             Assert.Throws<ArgumentNullException>("fileContent",
-                () => _factory.CreateFromMessageWithAttachment(from, to, null, subject, null,
+                () => _factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, subject, null,
                     null, null));
         }
 
@@ -279,7 +279,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             Assert.Throws<ArgumentNullException>("fileName",
-                () => _factory.CreateFromMessageWithAttachment(from, to, null, subject, fileContent,
+                () => _factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, subject, fileContent,
                     null, null));
         }
 
@@ -295,7 +295,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             Assert.Throws<ArgumentNullException>("bodyHtml",
-                () => _factory.CreateFromMessageWithAttachment(from, to, null, subject, fileContent,
+                () => _factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, subject, fileContent,
                     fileName, null));
         }
 
@@ -312,7 +312,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             var result =
-                _factory.CreateFromMessageWithAttachment(from, to, null, subject, fileContent, fileName, bodyHtml);
+                _factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, subject, fileContent, fileName, bodyHtml);
 
             //Assert
             Assert.Equal(from, result.From[0].ToString());
@@ -338,7 +338,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             var result =
-                _factory.CreateFromMessageWithAttachment(from, to, cc, subject, fileContent, fileName, bodyHtml);
+                _factory.CreateFromMessageWithAttachment(from, string.Empty, to, cc, subject, fileContent, fileName, bodyHtml);
 
             //Assert
             Assert.Equal(cc[0], result.Cc[0].ToString());
@@ -358,7 +358,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Act
             var result =
-                _factory.CreateFromMessageWithAttachment(from, to, cc, subject, fileContent, fileName, bodyHtml);
+                _factory.CreateFromMessageWithAttachment(from, string.Empty, to, cc, subject, fileContent, fileName, bodyHtml);
 
             //Assert
             Assert.Single(result.Cc);
@@ -393,7 +393,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var expectedSubject = "Subject (Development)";
 
             //Act
-            var result = factory.CreateFromMessage(from, to, null, subject, bodyHtml);
+            var result = factory.CreateFromMessage(from, string.Empty, to, null, subject, bodyHtml);
 
             //Assert
             Assert.Equal(expectedSubject, result.Subject);
@@ -419,7 +419,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var expectedSubject = "Subject (Development)";
 
             //Act
-            var result = factory.CreateFromMessageWithAttachment(from, to, null, subject, fileContent, fileName, bodyHtml);
+            var result = factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, subject, fileContent, fileName, bodyHtml);
 
             //Assert
             Assert.Equal(expectedSubject, result.Subject);
@@ -449,7 +449,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Verifiable();
 
             //Act
-            var result = factory.CreateFromMessage(from, to, null, subject, bodyHtml);
+            var result = factory.CreateFromMessage(from, string.Empty, to, null, subject, bodyHtml);
 
             //Assert
             _emailTemplateFactoryMock.Verify();
@@ -480,7 +480,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Verifiable();
 
             //Act
-            var result = factory.CreateFromMessage(from, to, null, subject, bodyHtml, requestedTemplate);
+            var result = factory.CreateFromMessage(from, string.Empty, to, null, subject, bodyHtml, requestedTemplate);
 
             //Assert
             _emailTemplateFactoryMock.Verify();
@@ -510,7 +510,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Verifiable();
 
             //Act
-            var result = factory.CreateFromMessageWithAttachment(from, to, null, subject, attachment, fileName, bodyHtml);
+            var result = factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, subject, attachment, fileName, bodyHtml);
 
             //Assert
             _emailTemplateFactoryMock.Verify();
@@ -543,7 +543,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Verifiable();
 
             //Act
-            var result = factory.CreateFromMessageWithAttachment(from, to, null, subject, attachment, fileName, bodyHtml, requestedTemplate);
+            var result = factory.CreateFromMessageWithAttachment(from, string.Empty, to, null, subject, attachment, fileName, bodyHtml, requestedTemplate);
 
             //Assert
             _emailTemplateFactoryMock.Verify();
