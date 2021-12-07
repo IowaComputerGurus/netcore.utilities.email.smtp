@@ -2,7 +2,7 @@ We want to welcome contributions from all interested parties to help continue to
 
 ## Branching Strategy
 
-We are using a simplified GitFlow structure for management of contributions.  All Pull Requests should be submitted to the Development branch, and once we are ready to create a production release the organizers will merge development into master for the release.
+We are using a simplified GitFlow structure for management of contributions.  All Pull Requests should be submitted to the `develop` branch, and once we are ready to create a production release the organizers will merge development into master for the release.
 
 ## Automated Build Verifications
 
