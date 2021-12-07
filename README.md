@@ -1,15 +1,10 @@
 # ICG.NetCore.Utilities.Email.Smtp ![](https://img.shields.io/github/license/iowacomputergurus/netcore.utilities.email.smtp.svg)
+
+![Build Status](https://github.com/IowaComputerGurus/netcore.utilities.email.emtp/actions/workflows/ci-build.yml/badge.svg)
+
 This library provides an easy to use implementation of SMTP based email delivery using the MailKit library internally.  This abstraction with proper interfaces allows email implementation inside of your project with little effort and easy to manage integration.
 
 This package depends on the ICG.NetCore.Utilities.Email project for template implementation, as well as the IEmailService interface for Dependency Injection
-
-## Build Status
-
-| Branch | Status |
-| --- | --- |
-| Master | ![Master Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email%20Smtp?branchName=master) |
-| Develop | ![Develop Status](https://iowacomputergurus.visualstudio.com/ICG%20Open%20Source/_apis/build/status/NetCore%20Utilities%20Email%20Smtp?branchName=develop)
-
 
 ## SonarCloud Analysis
 
@@ -19,7 +14,7 @@ This package depends on the ICG.NetCore.Utilities.Email project for template imp
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=IowaComputerGurus_netcore.utilities.email.smtp&metric=sqale_index)](https://sonarcloud.io/dashboard?id=IowaComputerGurus_netcore.utilities.email.smtp)
 
 
-## NuGet (ICG.NetCore.Utilities.Email.Smtp)
+## NuGet
 
 ![](https://img.shields.io/nuget/v/icg.netcore.utilities.email.smtp.svg) ![](https://img.shields.io/nuget/dt/icg.netcore.utilities.email.smtp.svg)
 
@@ -36,19 +31,19 @@ In an effort to standardize our Email libraries a common `IEmailService` interfa
 
 ### Installation
 Standard installation via HuGet Package Manager
-```
+``` powershell
 Install-Package ICG.NetCore.Utilities.Email.Smtp
 ```
 
 ### Setup & Configuration Options
 To setup the needed dependency injection items for this library, add the following line in your DI setup.
-```
+``` csharp
 services.UseIcgNetCoreUtilitiesEmailSmtp();
 ```
 
 Additionally you must specify the needed configuration elements within your AppSettings.json file
 
-```
+``` json
   "SmtpServiceOptions": {
     "AdminEmail": "test@test.com",
     "AdminName" : "John Smith",
@@ -86,7 +81,7 @@ Additionally you must specify the needed configuration elements within your AppS
 
 Usage is primarly completed by injecting the `IEmailService` interface to your respective project, one injected emails can be sent with a single line of code. 
 
-```
+``` csharp
 _service.SendEmail("recipient@me.com", "My Subject", "<p>Hello!</p>");
 ```
 
