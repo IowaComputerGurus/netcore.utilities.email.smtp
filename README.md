@@ -38,7 +38,7 @@ Install-Package ICG.NetCore.Utilities.Email.Smtp
 ### Setup & Configuration Options
 To setup the needed dependency injection items for this library, add the following line in your DI setup.
 ``` csharp
-services.UseIcgNetCoreUtilitiesEmailSmtp();
+services.UseIcgNetCoreUtilitiesEmailSmtp(configuration);
 ```
 
 Additionally you must specify the needed configuration elements within your AppSettings.json file
