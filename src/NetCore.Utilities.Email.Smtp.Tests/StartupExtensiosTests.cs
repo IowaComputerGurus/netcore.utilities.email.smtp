@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -45,8 +45,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
-            collection.AddSingleton(new Mock<Microsoft.Extensions.Hosting.IHostingEnvironment>().Object);
-            collection.AddSingleton(new Mock<IHostingEnvironment>().Object);
+            collection.AddSingleton(new Mock<IHostEnvironment>().Object);
             collection.UseIcgNetCoreUtilitiesEmailSmtp(configuration);
             var services = collection.BuildServiceProvider();
 
@@ -66,8 +65,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
-            collection.AddSingleton(new Mock<Microsoft.Extensions.Hosting.IHostingEnvironment>().Object);
-            collection.AddSingleton(new Mock<IHostingEnvironment>().Object);
+            collection.AddSingleton(new Mock<IHostEnvironment>().Object);
             collection.AddSingleton(new Mock<ILogger<MimeMessageFactory>>().Object);
             collection.UseIcgNetCoreUtilitiesEmailSmtp(configuration);
             var services = collection.BuildServiceProvider();
@@ -88,8 +86,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
-            collection.AddSingleton(new Mock<Microsoft.Extensions.Hosting.IHostingEnvironment>().Object);
-            collection.AddSingleton(new Mock<IHostingEnvironment>().Object);
+            collection.AddSingleton(new Mock<IHostEnvironment>().Object);
             collection.AddSingleton(new Mock<ILogger<MimeMessageFactory>>().Object);
             collection.UseIcgNetCoreUtilitiesEmailSmtp(configuration);
             var services = collection.BuildServiceProvider();

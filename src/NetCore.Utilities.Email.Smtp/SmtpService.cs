@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Options;
+using MimeKit;
 
 namespace ICG.NetCore.Utilities.Email.Smtp
 {
@@ -112,6 +114,66 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             //Send
             _mimeKitService.SendEmail(toSend);
 
+            return true;
+        }
+
+        /// <inheritdoc />
+        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, string subject, string bodyHtml)
+        {
+            //Call full overload
+            return SendWithReplyTo(replyToAddress, replyToName, toAddress, null, subject, bodyHtml);
+        }
+
+        /// <inheritdoc />
+        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        {
+            //Call full overload
+            return SendWithReplyTo(replyToAddress, replyToName, toAddress, null, subject, bodyHtml, null, "");
+        }
+
+        /// <inheritdoc />
+        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        {
+            //Call full overload
+            return SendWithReplyTo(replyToAddress, replyToName, toAddress, ccAddressList, subject, bodyHtml, null, "");
+        }
+
+        /// <inheritdoc />
+        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        {
+            //Call full overload
+            return SendWithReplyTo(replyToAddress, replyToName, toAddress, ccAddressList, subject, bodyHtml, tokens, "");
+        }
+
+        /// <inheritdoc />
+        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens, string templateName, string senderKeyName = "")
+        {
+            if (string.IsNullOrEmpty(replyToAddress))
+                throw new ArgumentNullException(nameof(replyToAddress));
+
+            if (tokens != null)
+            {
+                foreach (var item in tokens)
+                {
+                    bodyHtml = bodyHtml.Replace(item.Key, item.Value);
+                }
+            }
+
+            //Get the message to send
+            var toSend = _mimeMessageFactory.CreateFromMessage(_serviceOptions.AdminEmail, _serviceOptions.AdminName, toAddress, ccAddressList,
+                subject, bodyHtml, templateName);
+
+            //Add the reply to if needed
+            if (!string.IsNullOrEmpty(replyToAddress))
+            {
+                var address = MailboxAddress.Parse(replyToAddress);
+                if(!string.IsNullOrEmpty(replyToName))
+                    address.Name = replyToName;
+                toSend.ReplyTo.Add(address);
+            }
+
+            //Send
+            _mimeKitService.SendEmail(toSend);
             return true;
         }
     }

@@ -14,7 +14,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
         private readonly Mock<ILogger<MimeMessageFactory>> _loggerMock;
         private readonly IMimeMessageFactory _factory;
         private readonly Mock<IEmailTemplateFactory> _emailTemplateFactoryMock;
-        private readonly Mock<IHostingEnvironment> _hostingEnvironment;
+        private readonly Mock<IHostEnvironment> _hostingEnvironment;
         private readonly SmtpServiceOptions _options = new SmtpServiceOptions()
         {
             AdminEmail = "admin@test.com",
@@ -30,7 +30,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
         public MimeMessageFactoryTests()
         {
             _loggerMock = new Mock<ILogger<MimeMessageFactory>>();
-            _hostingEnvironment = new Mock<IHostingEnvironment>();
+            _hostingEnvironment = new Mock<IHostEnvironment>();
             _emailTemplateFactoryMock = new Mock<IEmailTemplateFactory>();
             _factory = new MimeMessageFactory(new OptionsWrapper<SmtpServiceOptions>(_options), _loggerMock.Object, _hostingEnvironment.Object, _emailTemplateFactoryMock.Object);
         }
