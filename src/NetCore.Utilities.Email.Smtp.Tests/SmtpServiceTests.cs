@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -118,6 +119,31 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
         }
 
         [Fact]
+        public void SendMessageWithReplyTo_WithoutCCRecipients_ShouldSend_DefaultingFromAddress()
+        {
+            //Arrange
+            var replyTo = "me@me.com";
+            var replyToName = "Bob";
+            var to = "tester@test.com";
+            var subject = "test";
+            var message = "message";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, _options.AdminName, to, null, subject, message, ""))
+                .Returns(mimeMessage).Verifiable();
+
+            //Act
+            _service.SendWithReplyTo(replyTo, replyToName, to, subject, message);
+
+            //Verify
+            Assert.Equal(1, mimeMessage.ReplyTo.Count);
+            var replyToAsAdded = mimeMessage.ReplyTo.First();
+            Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+        }
+
+        [Fact]
         public void SendMessage_WithCCRecipients_ShouldSend_DefaultingFromAddress()
         {
             //Arrange
@@ -134,6 +160,32 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             _service.SendMessage(to, cc, subject, message);
 
             //Verify
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+        }
+
+        [Fact]
+        public void SendMessageWithReplyTo_WithCCRecipients_ShouldSend_DefaultingFromAddress()
+        {
+            //Arrange
+            var replyTo = "me@me.com";
+            var replyToName = "Bob";
+            var to = "tester@test.com";
+            var cc = new List<string> { "Person1@test.com" };
+            var subject = "test";
+            var message = "message";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, _options.AdminName, to, cc, subject, message, ""))
+                .Returns(mimeMessage).Verifiable();
+
+            //Act
+            _service.SendWithReplyTo(replyTo, replyToName, to, cc, subject, message);
+
+            //Verify
+            Assert.Equal(1, mimeMessage.ReplyTo.Count);
+            var replyToAsAdded = mimeMessage.ReplyTo.First();
+            Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
             _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
         }
@@ -179,6 +231,33 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             _service.SendMessage(to, cc, subject, message, null, requestedTemplate);
 
             //Assets
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+        }
+
+        [Fact]
+        public void SendMessageWithReplyTo_ShouldPassOptionalTemplateName_ToMessageMethods()
+        {
+            //Arrange
+            var replyTo = "me@me.com";
+            var replyToName = "Bob";
+            var to = "tester@test.com";
+            var cc = new List<string> { "Person1@test.com" };
+            var subject = "test";
+            var message = "message";
+            var requestedTemplate = "Test";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(_options.AdminEmail, _options.AdminName, to, cc, subject, message, requestedTemplate))
+                .Returns(mimeMessage).Verifiable();
+
+            //Act
+            _service.SendWithReplyTo(replyTo, replyToName, to, cc, subject, message, null, requestedTemplate);
+
+            //Assets
+            Assert.Equal(1, mimeMessage.ReplyTo.Count);
+            var replyToAsAdded = mimeMessage.ReplyTo.First();
+            Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
             _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
         }
