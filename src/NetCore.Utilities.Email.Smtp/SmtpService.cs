@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -33,45 +34,45 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         }
 
         /// <inheritdoc />
-        public bool SendMessageToAdministrator(string subject, string bodyHtml)
+        public async Task<bool> SendMessageToAdministratorAsync(string subject, string bodyHtml)
         {
             //Force to address
-            return SendMessage(_serviceOptions.AdminEmail, null, subject, bodyHtml, null, "");
+            return await SendMessageAsync(_serviceOptions.AdminEmail, null, subject, bodyHtml, null, "");
         }
 
         /// <inheritdoc />
-        public bool SendMessageToAdministrator(IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        public async Task<bool> SendMessageToAdministratorAsync(IEnumerable<string> ccAddressList, string subject, string bodyHtml)
         {
-            return SendMessage(_serviceOptions.AdminEmail, ccAddressList, subject, bodyHtml, null, "");
+            return await SendMessageAsync(_serviceOptions.AdminEmail, ccAddressList, subject, bodyHtml, null, "");
         }
 
         /// <inheritdoc />
-        public bool SendMessage(string toAddress, string subject, string bodyHtml)
+        public async Task<bool> SendMessageAsync(string toAddress, string subject, string bodyHtml)
         {
             //Call full overload
-            return SendMessage(toAddress, null, subject, bodyHtml, null, "");
+            return await SendMessageAsync(toAddress, null, subject, bodyHtml, null, "");
         }
 
         /// <inheritdoc />
-        public bool SendMessage(string toAddress, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        public async Task<bool> SendMessageAsync(string toAddress, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
         {
-            return SendMessage(toAddress, null, subject, bodyHtml, null, "");
+            return await SendMessageAsync(toAddress, null, subject, bodyHtml, null, "");
         }
 
         /// <inheritdoc />
-        public bool SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        public async Task<bool> SendMessageAsync(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
         {
-            return SendMessage(toAddress, ccAddressList, subject, bodyHtml, null, "");
+            return await SendMessageAsync(toAddress, ccAddressList, subject, bodyHtml, null, "");
         }
 
         /// <inheritdoc />
-        public bool SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        public async Task<bool> SendMessageAsync(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
         {
-            return SendMessage(toAddress, ccAddressList, subject, bodyHtml, tokens, "");
+            return await SendMessageAsync(toAddress, ccAddressList, subject, bodyHtml, tokens, "");
         }
 
         /// <inheritdoc />
-        public bool SendMessage(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml,
+        public async Task<bool> SendMessageAsync(string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml,
             List<KeyValuePair<string, string>> tokens,
             string templateName, string senderKeyName = "")
         {
@@ -87,15 +88,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             //Convert to a mime message
             var toSend = _mimeMessageFactory.CreateFromMessage(_serviceOptions.AdminEmail, _serviceOptions.AdminName, toAddress, ccAddressList,
                 subject, bodyHtml, templateName);
-            
+
             //Send
-            _mimeKitService.SendEmail(toSend);
+            await Task.Run(() => _mimeKitService.SendEmail(toSend));
 
             return true; //Success
         }
 
         /// <inheritdoc />
-        public bool SendMessageWithAttachment(string toAddress, IEnumerable<string> ccAddressList, string subject,
+        public async Task<bool> SendMessageWithAttachmentAsync(string toAddress, IEnumerable<string> ccAddressList, string subject,
             byte[] fileContent, string fileName, string bodyHtml, List<KeyValuePair<string, string>> tokens, string templateName = "", string senderKeyName = "")
         {
             //TODO: Optimize this
@@ -112,41 +113,41 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                 ccAddressList, subject, fileContent, fileName, bodyHtml, templateName);
 
             //Send
-            _mimeKitService.SendEmail(toSend);
+            await Task.Run(() => _mimeKitService.SendEmail(toSend));
 
             return true;
         }
 
         /// <inheritdoc />
-        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, string subject, string bodyHtml)
+        public async Task<bool> SendWithReplyToAsync(string replyToAddress, string replyToName, string toAddress, string subject, string bodyHtml)
         {
             //Call full overload
-            return SendWithReplyTo(replyToAddress, replyToName, toAddress, null, subject, bodyHtml);
+            return await SendWithReplyToAsync(replyToAddress, replyToName, toAddress, null, subject, bodyHtml);
         }
 
         /// <inheritdoc />
-        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        public async Task<bool> SendWithReplyToAsync(string replyToAddress, string replyToName, string toAddress, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
         {
             //Call full overload
-            return SendWithReplyTo(replyToAddress, replyToName, toAddress, null, subject, bodyHtml, null, "");
+            return await SendWithReplyToAsync(replyToAddress, replyToName, toAddress, null, subject, bodyHtml, null, "");
         }
 
         /// <inheritdoc />
-        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        public async Task<bool> SendWithReplyToAsync(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
         {
             //Call full overload
-            return SendWithReplyTo(replyToAddress, replyToName, toAddress, ccAddressList, subject, bodyHtml, null, "");
+            return await SendWithReplyToAsync(replyToAddress, replyToName, toAddress, ccAddressList, subject, bodyHtml, null, "");
         }
 
         /// <inheritdoc />
-        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        public async Task<bool> SendWithReplyToAsync(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
         {
             //Call full overload
-            return SendWithReplyTo(replyToAddress, replyToName, toAddress, ccAddressList, subject, bodyHtml, tokens, "");
+            return await SendWithReplyToAsync(replyToAddress, replyToName, toAddress, ccAddressList, subject, bodyHtml, tokens, "");
         }
 
         /// <inheritdoc />
-        public bool SendWithReplyTo(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens, string templateName, string senderKeyName = "")
+        public async Task<bool> SendWithReplyToAsync(string replyToAddress, string replyToName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens, string templateName, string senderKeyName = "")
         {
             if (string.IsNullOrEmpty(replyToAddress))
                 throw new ArgumentNullException(nameof(replyToAddress));
@@ -173,7 +174,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             }
 
             //Send
-            _mimeKitService.SendEmail(toSend);
+            await Task.Run(() => _mimeKitService.SendEmail(toSend));
             return true;
         }
     }
