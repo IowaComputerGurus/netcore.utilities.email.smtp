@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -14,7 +15,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         /// Sends an email message
         /// </summary>
         /// <param name="toSend">The message to send</param>
-        void SendEmail(MimeMessage toSend);
+        Task SendEmailAsync(MimeMessage toSend);
     }
 
     /// <summary>
@@ -38,13 +39,13 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         }
 
         /// <inheritdoc />
-        public void SendEmail(MimeMessage toSend)
+        public async Task SendEmailAsync(MimeMessage toSend)
         {
             using var client = new SmtpClient();
-            client.Connect(_configuration.Value.Server, _configuration.Value.Port, _configuration.Value.UseSsl);
+            await client.ConnectAsync(_configuration.Value.Server, _configuration.Value.Port, _configuration.Value.UseSsl);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
-            client.Authenticate(_configuration.Value.SenderUsername, _configuration.Value.SenderPassword);
-            client.Send(toSend);
+            await client.AuthenticateAsync(_configuration.Value.SenderUsername, _configuration.Value.SenderPassword);
+            await client.SendAsync(toSend);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var replyToAsAdded = mimeMessage.ReplyTo.First();
             Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -162,7 +162,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -188,7 +188,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var replyToAsAdded = mimeMessage.ReplyTo.First();
             Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -211,7 +211,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Assets
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -233,7 +233,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Assets
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -260,7 +260,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             var replyToAsAdded = mimeMessage.ReplyTo.First();
             Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
@@ -284,7 +284,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
 
             //Assets
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
     }
 }

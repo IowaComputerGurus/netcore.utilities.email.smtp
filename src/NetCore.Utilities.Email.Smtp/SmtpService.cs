@@ -90,7 +90,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                 subject, bodyHtml, templateName);
 
             //Send
-            await Task.Run(() => _mimeKitService.SendEmail(toSend));
+            await _mimeKitService.SendEmailAsync(toSend);
 
             return true; //Success
         }
@@ -113,7 +113,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
                 ccAddressList, subject, fileContent, fileName, bodyHtml, templateName);
 
             //Send
-            await Task.Run(() => _mimeKitService.SendEmail(toSend));
+            await _mimeKitService.SendEmailAsync(toSend);
 
             return true;
         }
@@ -174,7 +174,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             }
 
             //Send
-            await Task.Run(() => _mimeKitService.SendEmail(toSend));
+            await _mimeKitService.SendEmailAsync(toSend);
             return true;
         }
     }
