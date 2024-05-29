@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Moq;
@@ -60,7 +61,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
         }
 
         [Fact]
-        public void SendToAdministrator_ShouldSend_DefaultingFromAndToAddress()
+        public async Task SendToAdministratorAsync_ShouldSend_DefaultingFromAndToAddress()
         {
             //Arrange
             var subject = "Test";
@@ -71,15 +72,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessageToAdministrator(subject, message);
+            await _service.SendMessageToAdministratorAsync(subject, message);
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendToAdministrator_ShouldSend_DefaultingFromAndToAddress_WithCCRecipients()
+        public async Task SendToAdministrator_ShouldSend_DefaultingFromAndToAddress_WithCCRecipients()
         {
             //Arrange
             var subject = "Test";
@@ -91,15 +92,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessageToAdministrator(cc, subject, message);
+            await _service.SendMessageToAdministratorAsync(cc, subject, message);
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessage_WithoutCCRecipients_ShouldSend_DefaultingFromAddress()
+        public async Task SendMessage_WithoutCCRecipients_ShouldSend_DefaultingFromAddress()
         {
             //Arrange
             var to = "tester@test.com";
@@ -111,15 +112,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessage(to, subject, message);
+            await _service.SendMessageAsync(to, subject, message);
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessageWithReplyTo_WithoutCCRecipients_ShouldSend_DefaultingFromAddress()
+        public async Task SendMessageWithReplyTo_WithoutCCRecipients_ShouldSend_DefaultingFromAddress()
         {
             //Arrange
             var replyTo = "me@me.com";
@@ -133,18 +134,18 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendWithReplyTo(replyTo, replyToName, to, subject, message);
+            await _service.SendWithReplyToAsync(replyTo, replyToName, to, subject, message);
 
             //Verify
-            Assert.Equal(1, mimeMessage.ReplyTo.Count);
+            Assert.Single(mimeMessage.ReplyTo);
             var replyToAsAdded = mimeMessage.ReplyTo.First();
             Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessage_WithCCRecipients_ShouldSend_DefaultingFromAddress()
+        public async Task SendMessage_WithCCRecipients_ShouldSend_DefaultingFromAddress()
         {
             //Arrange
             var to = "tester@test.com";
@@ -157,15 +158,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessage(to, cc, subject, message);
+            await _service.SendMessageAsync(to, cc, subject, message);
 
             //Verify
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessageWithReplyTo_WithCCRecipients_ShouldSend_DefaultingFromAddress()
+        public async Task SendMessageWithReplyTo_WithCCRecipients_ShouldSend_DefaultingFromAddress()
         {
             //Arrange
             var replyTo = "me@me.com";
@@ -180,18 +181,18 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendWithReplyTo(replyTo, replyToName, to, cc, subject, message);
+            await _service.SendWithReplyToAsync(replyTo, replyToName, to, cc, subject, message);
 
             //Verify
-            Assert.Equal(1, mimeMessage.ReplyTo.Count);
+            Assert.Single(mimeMessage.ReplyTo);
             var replyToAsAdded = mimeMessage.ReplyTo.First();
             Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessageWithAttachment_ShouldSend_DefaultingFromAddress()
+        public async Task SendMessageWithAttachment_ShouldSend_DefaultingFromAddress()
         {
             //Arrange
             var to = "tester@test.com";
@@ -206,15 +207,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message, null);
+            await _service.SendMessageWithAttachmentAsync(to, cc, subject, fileContent, fileName, message, null);
 
             //Assets
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessage_ShouldPassOptionalTemplateName_ToMessageMethods()
+        public async Task SendMessage_ShouldPassOptionalTemplateName_ToMessageMethods()
         {
             //Arrange
             var to = "tester@test.com";
@@ -228,15 +229,15 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessage(to, cc, subject, message, null, requestedTemplate);
+            await _service.SendMessageAsync(to, cc, subject, message, null, requestedTemplate);
 
             //Assets
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessageWithReplyTo_ShouldPassOptionalTemplateName_ToMessageMethods()
+        public async Task SendMessageWithReplyTo_ShouldPassOptionalTemplateName_ToMessageMethods()
         {
             //Arrange
             var replyTo = "me@me.com";
@@ -252,18 +253,18 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendWithReplyTo(replyTo, replyToName, to, cc, subject, message, null, requestedTemplate);
+            await _service.SendWithReplyToAsync(replyTo, replyToName, to, cc, subject, message, null, requestedTemplate);
 
             //Assets
-            Assert.Equal(1, mimeMessage.ReplyTo.Count);
+            Assert.Single(mimeMessage.ReplyTo);
             var replyToAsAdded = mimeMessage.ReplyTo.First();
             Assert.Equal("\"Bob\" <me@me.com>", replyToAsAdded.ToString());
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
 
         [Fact]
-        public void SendMessageWithAttachment_ShouldPassOptionalTemplateName_ToMessageMethods()
+        public async Task SendMessageWithAttachment_ShouldPassOptionalTemplateName_ToMessageMethods()
         {
             //Arrange
             var to = "tester@test.com";
@@ -279,11 +280,11 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
                 .Returns(mimeMessage).Verifiable();
 
             //Act
-            _service.SendMessageWithAttachment(to, cc, subject, fileContent, fileName, message, null, requestedTemplate);
+            await _service.SendMessageWithAttachmentAsync(to, cc, subject, fileContent, fileName, message, null, requestedTemplate);
 
             //Assets
             _mimeMessageFactoryMock.Verify();
-            _mimeKitServiceMock.Verify(k => k.SendEmail(mimeMessage));
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
     }
 }
