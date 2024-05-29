@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>ICG.NetCore.Utilities.Email.Smtp</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -10,8 +10,8 @@
   <PropertyGroup>
     <PackageId>ICG.NetCore.Utilities.Email.Smtp</PackageId>
     <Title>NetCore Utilities Email SMTP</Title>
-    <Description>A library providing an easy to use set of functions rounding the SMTPClient.</Description>
-    <Copyright>Copyright 2021, IowaComputerGurus, Inc. All Rights Reserved</Copyright>
+    <Description>A library providing easy access to sending emails, including templated emails, via SMTP from .NET 8+.</Description>
+    <Copyright>Copyright 2024, IowaComputerGurus, Inc. All Rights Reserved</Copyright>
     <PackageProjectUrl>https://github.com/IowaComputerGurus/netcore.utilities.email.smtp</PackageProjectUrl>
     <PackageTags>aspnetcore;utility;email</PackageTags>
     <RepositoryUrl>https://github.com/IowaComputerGurus/netcore.utilities.email.smtp</RepositoryUrl>
@@ -35,11 +35,11 @@
   <ItemGroup>
     <PackageReference Include="icg.netcore.utilities.email" Version="7.0.0" />
     <PackageReference Include="MailKit" Version="4.6.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
