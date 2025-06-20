@@ -37,6 +37,9 @@ jobs:
       run: dotnet build "${{ env.solution-path }}" --no-restore --configuration Release -p:version=${{ steps.gitversion.outputs.majorMinorPatch }}
     - name: Test
       run: dotnet test "${{ env.solution-path }}" --no-build --configuration Release
+
+    - name: Pack
+      run: dotnet pack "${{ env.solution-path }}" --no-build --configuration Release --output ./nupkgs -p:Version=${{ steps.gitversion.outputs.majorMinorPatch }}
     
     - name: Publish
-      run: dotnet nuget push **/*.nupkg -s 'https://api.nuget.org/v3/index.json' -k ${{secrets.ICG_NUGET_API_KEY}}
+      run: dotnet nuget push "./nupkgs/*.nupkg" -s "https://api.nuget.org/v3/index.json" -k "${{ secrets.ICG_NUGET_API_KEY }}"
