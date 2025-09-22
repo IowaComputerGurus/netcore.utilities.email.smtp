@@ -26,7 +26,7 @@ jobs:
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v3.0.1
       with:
-        versionSpec: '6.0.5'
+        versionSpec: '6.4.0'
         
     - name: Determine Version
       id: gitversion
@@ -80,7 +80,7 @@ jobs:
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v3.0.1
         with:
-          versionSpec: '6.0.5'
+          versionSpec: '6.4.0'
         
       - name: Determine Version
         id: gitversion
