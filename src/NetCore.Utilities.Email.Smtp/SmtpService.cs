@@ -177,5 +177,62 @@ namespace ICG.NetCore.Utilities.Email.Smtp
             await _mimeKitService.SendEmailAsync(toSend);
             return true;
         }
+
+        /// <inheritdoc />
+        public async Task<bool> SendWithCustomFromEmailAsync(string fromAddress, string fromName, string toAddress, string subject, string bodyHtml)
+        {
+            return await SendWithCustomFromEmailAsync(fromAddress, fromName, toAddress, null, subject, bodyHtml, null, "");
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> SendWithCustomFromEmailAsync(string fromAddress, string fromName, string toAddress, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        {
+            return await SendWithCustomFromEmailAsync(fromAddress, fromName, toAddress, null, subject, bodyHtml, tokens, "");
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> SendWithCustomFromEmailAsync(string fromAddress, string fromName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml)
+        {
+            return await SendWithCustomFromEmailAsync(fromAddress, fromName, toAddress, ccAddressList, subject, bodyHtml, null, "");
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> SendWithCustomFromEmailAsync(string fromAddress, string fromName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens)
+        {
+            return await SendWithCustomFromEmailAsync(fromAddress, fromName, toAddress, ccAddressList, subject, bodyHtml, tokens, "");
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> SendWithCustomFromEmailAsync(string fromAddress, string fromName, string toAddress, IEnumerable<string> ccAddressList, string subject, string bodyHtml, List<KeyValuePair<string, string>> tokens, string templateName, string senderKeyName = "")
+        {
+            if (tokens != null)
+            {
+                foreach (var item in tokens)
+                {
+                    bodyHtml = bodyHtml.Replace(item.Key, item.Value);
+                }
+            }
+            var toSend = _mimeMessageFactory.CreateFromMessage(fromAddress, fromName, toAddress, ccAddressList, subject, bodyHtml, templateName);
+            await _mimeKitService.SendEmailAsync(toSend);
+            return true;
+        }
+
+
+        /// <inheritdoc />
+        public async Task<bool> SendWithCustomFromEmailAndAttachmentAsync(string fromAddress, string fromName, string toAddress, IEnumerable<string> ccAddressList, string subject,
+        byte[] fileContent, string fileName, string bodyHtml, List<KeyValuePair<string, string>> tokens,
+            string templateName = "", string senderKeyName = "")
+        {
+            if (tokens != null)
+            {
+                foreach (var item in tokens)
+                {
+                    bodyHtml = bodyHtml.Replace(item.Key, item.Value);
+                }
+            }
+            var toSend = _mimeMessageFactory.CreateFromMessageWithAttachment(fromAddress, fromName, toAddress, ccAddressList, subject, fileContent, fileName, bodyHtml, templateName);
+            await _mimeKitService.SendEmailAsync(toSend);
+            return true;
+        }
     }
 }

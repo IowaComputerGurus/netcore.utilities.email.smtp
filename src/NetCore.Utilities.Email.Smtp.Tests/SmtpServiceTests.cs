@@ -286,5 +286,124 @@ namespace ICG.NetCore.Utilities.Email.Smtp.Tests
             _mimeMessageFactoryMock.Verify();
             _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
         }
+
+        [Fact]
+        public async Task SendWithCustomFromEmailAsync_ShouldSend_WithCustomSender()
+        {
+            var from = "custom@test.com";
+            var fromName = "Custom Sender";
+            var to = "recipient@test.com";
+            var subject = "Subject";
+            var bodyHtml = "<p>Body</p>";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(from, fromName, to, null, subject, bodyHtml, ""))
+                .Returns(mimeMessage).Verifiable();
+            await _service.SendWithCustomFromEmailAsync(from, fromName, to, subject, bodyHtml);
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
+        }
+
+        [Fact]
+        public async Task SendWithCustomFromEmailAsync_ShouldSend_WithTokens()
+        {
+            var from = "custom@test.com";
+            var fromName = "Custom Sender";
+            var to = "recipient@test.com";
+            var subject = "Subject";
+            var bodyHtml = "Hello, {Name}";
+            var tokens = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("{Name}", "World") };
+            var expectedBody = "Hello, World";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(from, fromName, to, null, subject, expectedBody, ""))
+                .Returns(mimeMessage).Verifiable();
+            await _service.SendWithCustomFromEmailAsync(from, fromName, to, subject, bodyHtml, tokens);
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
+        }
+
+        [Fact]
+        public async Task SendWithCustomFromEmailAsync_ShouldSend_WithCC()
+        {
+            var from = "custom@test.com";
+            var fromName = "Custom Sender";
+            var to = "recipient@test.com";
+            var cc = new List<string> { "cc@test.com" };
+            var subject = "Subject";
+            var bodyHtml = "<p>Body</p>";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(from, fromName, to, cc, subject, bodyHtml, ""))
+                .Returns(mimeMessage).Verifiable();
+            await _service.SendWithCustomFromEmailAsync(from, fromName, to, cc, subject, bodyHtml);
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
+        }
+
+        [Fact]
+        public async Task SendWithCustomFromEmailAsync_ShouldSend_WithCCAndTokens()
+        {
+            var from = "custom@test.com";
+            var fromName = "Custom Sender";
+            var to = "recipient@test.com";
+            var cc = new List<string> { "cc@test.com" };
+            var subject = "Subject";
+            var bodyHtml = "Hello, {Name}";
+            var tokens = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("{Name}", "World") };
+            var expectedBody = "Hello, World";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(from, fromName, to, cc, subject, expectedBody, ""))
+                .Returns(mimeMessage).Verifiable();
+            await _service.SendWithCustomFromEmailAsync(from, fromName, to, cc, subject, bodyHtml, tokens);
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
+        }
+
+        [Fact]
+        public async Task SendWithCustomFromEmailAsync_ShouldSend_WithTemplateAndSenderKey()
+        {
+            var from = "custom@test.com";
+            var fromName = "Custom Sender";
+            var to = "recipient@test.com";
+            var cc = new List<string> { "cc@test.com" };
+            var subject = "Subject";
+            var bodyHtml = "<p>Body</p>";
+            var tokens = new List<KeyValuePair<string, string>>();
+            var templateName = "CustomTemplate";
+            var senderKeyName = "SenderKey";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessage(from, fromName, to, cc, subject, bodyHtml, templateName))
+                .Returns(mimeMessage).Verifiable();
+            await _service.SendWithCustomFromEmailAsync(from, fromName, to, cc, subject, bodyHtml, tokens, templateName, senderKeyName);
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
+        }
+
+        [Fact]
+        public async Task SendWithCustomFromEmailAndAttachmentAsync_ShouldSend_WithAllParameters()
+        {
+            var from = "custom@test.com";
+            var fromName = "Custom Sender";
+            var to = "recipient@test.com";
+            var cc = new List<string> { "cc@test.com" };
+            var subject = "Subject";
+            var fileContent = Encoding.ASCII.GetBytes("Attachment");
+            var fileName = "file.txt";
+            var bodyHtml = "Hello, {Name}";
+            var tokens = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("{Name}", "World") };
+            var expectedBody = "Hello, World";
+            var templateName = "CustomTemplate";
+            var senderKeyName = "SenderKey";
+            var mimeMessage = new MimeMessage();
+            _mimeMessageFactoryMock
+                .Setup(f => f.CreateFromMessageWithAttachment(from, fromName, to, cc, subject, fileContent, fileName, expectedBody, templateName))
+                .Returns(mimeMessage).Verifiable();
+            await _service.SendWithCustomFromEmailAndAttachmentAsync(from, fromName, to, cc, subject, fileContent, fileName, bodyHtml, tokens, templateName, senderKeyName);
+            _mimeMessageFactoryMock.Verify();
+            _mimeKitServiceMock.Verify(k => k.SendEmailAsync(mimeMessage));
+        }
     }
 }
