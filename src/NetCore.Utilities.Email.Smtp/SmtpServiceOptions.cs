@@ -14,7 +14,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         public string AdminEmail { get; set; }
 
         /// <summary>
-        /// An optional name for the administrative user
+        ///     An optional name for the administrative user
         /// </summary>
         [Display(Name = "Admin Name")]
         public string AdminName { get; set; }
@@ -38,10 +38,10 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         public bool UseSsl { get; set; }
 
         /// <summary>
-        /// Should this use TLS connection
+        ///     Should this use StartTls connection
         /// </summary>
-        [Display(Name = "Use TLS")]
-        public bool UseTls { get; set; }
+        [Display(Name = "Use StartTls")]
+        public bool UseStartTls { get; set; }
 
         /// <summary>
         ///     The username to use for sending

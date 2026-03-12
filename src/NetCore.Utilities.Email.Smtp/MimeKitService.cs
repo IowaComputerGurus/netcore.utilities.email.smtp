@@ -42,7 +42,7 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         public async Task SendEmailAsync(MimeMessage toSend)
         {
             using var client = new SmtpClient();
-            if (!_configuration.Value.UseTls)
+            if (!_configuration.Value.UseStartTls)
             {
                 await client.ConnectAsync(_configuration.Value.Server, _configuration.Value.Port, _configuration.Value.UseSsl);
             }
