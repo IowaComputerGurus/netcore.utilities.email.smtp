@@ -50,6 +50,7 @@ Additionally you must specify the needed configuration elements within your AppS
     "Server": "test.smtp.com",
     "Port": 527,
     "UseSsl": true,
+    "UseTls": false,
     "SenderUsername": "MySender",
     "SenderPassword": "Password",
     "AlwaysTemplateEmails": true,
@@ -69,6 +70,7 @@ Additionally you must specify the needed configuration elements within your AppS
 | Server | The SMTP Server address to use |
 | Port | The Port to use for outbound emails |
 | UseSsl | Should SSL be used for emails |
+| UseTls | Should TLS be used for emails |
 | SenderUsername | The username that should be used to connect to SMTP |
 | SenderPassword | The password that should be used to connect to SMTP |
 | AlwaysTemplateEmails | If selected ALL emails sent will be templated, by default using the "DefaultTemplate" as configured |
