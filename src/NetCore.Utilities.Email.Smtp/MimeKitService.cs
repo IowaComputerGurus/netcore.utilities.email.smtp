@@ -42,7 +42,14 @@ namespace ICG.NetCore.Utilities.Email.Smtp
         public async Task SendEmailAsync(MimeMessage toSend)
         {
             using var client = new SmtpClient();
-            await client.ConnectAsync(_configuration.Value.Server, _configuration.Value.Port, _configuration.Value.UseSsl);
+            if (!_configuration.Value.UseStartTls)
+            {
+                await client.ConnectAsync(_configuration.Value.Server, _configuration.Value.Port, _configuration.Value.UseSsl);
+            }
+            else
+            {
+                await client.ConnectAsync(_configuration.Value.Server, _configuration.Value.Port, MailKit.Security.SecureSocketOptions.StartTls);
+            }
             client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.AuthenticateAsync(_configuration.Value.SenderUsername, _configuration.Value.SenderPassword);
             await client.SendAsync(toSend);
