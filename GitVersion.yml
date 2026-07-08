@@ -1,24 +1,20 @@
-mode: ContinuousDeployment
-branches: 
-  develop:
-    regex: develop
-    label: 'alpha'
-    increment: Patch
+# Start with the default configurations for the GitHub Flow pattern
+workflow: GitHubFlow/v1
+mode: ContinuousDelivery
+
+#Override our specific items
+next-version: 1.0.0  # This is only really effective for the initial setup, once the first tag is committed, this will be ignored
+
+# We utilize "develop" as aour branch so we need to override a few specifications to support this
+branches:
+  main:
+    regex: "^master$|^main$|^develop$"
+
+  # For releases we do not want to roll folward if they are tagged
+  release:
     prevent-increment:
+      of-merged-branch: true
+      when-branch-merged: false
       when-current-commit-tagged: true
-    source-branches: []
-  hotfix:
-    regex: hotfix[/-]
-    source-branches: [develop]
-    prevent-increment:
-      when-current-commit-tagged: true
-    is-release-branch: true
-  pull-request:
-    regex: (pull|pull\-requests|pr)[/-]
-    label: 'pr'
-    increment: Patch
-    is-release-branch: false
-    source-branches: []
-ignore:
-  sha: []
-merge-message-formats: {}
+
+  ## NOTE: For the purposes of GitVersion "source-branches" are anything that matches the grouping set above with the regex so it is safe to leave the rest as is
